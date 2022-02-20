@@ -1,54 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Popup.css';
 const cheerio = require('cheerio');
 const axios = require('axios');
 let new_product;
 
 const Popup = () => {
-  console.log('befor hi');
-  chrome.runtime.sendMessage(
-    {
-      message: 'userStatus',
-    },
-    (response) => {
-      if (response.message === 'success') {
-        console.log('로그인 성공');
-      } else if (response.message === 'login') {
-        console.log('로그인하세요');
-        alert('로그인 하세요.');
-      }
-    }
-  );
-  console.log('after hi');
+  const [products, setProducts] = useState([]);
+
+  let authToken = '';
+  chrome.storage.local.get(['userStatus'], function (items) {
+    authToken = items.userStatus;
+    console.log(`authToken??? : ${authToken}`);
+    axios
+      .post('http://127.0.0.1:8000/privatebasket/basket', {
+        token: authToken,
+      })
+      .then((Response) => {
+        console.log('save success:', Response.data);
+        setProducts(Response.data);
+      })
+      .catch((Error) => {
+        console.log(Error);
+      });
+  });
 
   chrome.tabs.query(
     { currentWindow: true, active: true },
     async function (tabs) {
-      // console.log(tabs[0].url);
       const shopUrl = tabs[0].url;
       new_product = await parse_product(shopUrl);
-      console.log(new_product);
       let imageBox = document.querySelector('#imageBox');
       let totalImg = '';
 
-      console.log(new_product.img);
-
       let imageUrl = new_product.img;
-      totalImg = `
-        <img src=${imageUrl} alt='img1'/>
-        `;
+      let product_name = new_product.product_name;
+      let sale_price = new_product.sale_price;
+      let shop_name = new_product.shop_name;
 
-      // append child 방식으로 시도해보기
-      // for (let i = 0; i < new_product.img.length; i++) {
-      //   let imageUrl = new_product.img[i].attribs.src;
-      //   totalImg += `
-      //   <div className='imageCard'>
-      //   <img src='https:${imageUrl}' alt='img1'/>
-      //   <input type='radio' name='img' value=${i}>
-      //   <button id=${i} className='btns'>check!</button>
-      //   </div>
-      //   `;
-      // }
+      totalImg = `
+        <div className='image__container'>
+        <img className='currentImg' src=${imageUrl} alt='img1'/>
+        </div>
+        <div className='image__description'>
+        <p>${shop_name}</p>
+        <p>${product_name}</p>
+        <p>${sale_price}</p>
+        </div>
+        `;
       imageBox.innerHTML += totalImg;
     }
   );
@@ -106,10 +104,7 @@ const Popup = () => {
     );
     shop_name = 'Musinsa';
     shop_url = url;
-    // img_url = $("meta[property='og:image']").attr('content');
-    img_url = $('#detail_thumb > ul > li > img');
-    const parsed_img_url = 'https:' + img_url[0].attribs.src;
-    console.log('img_url 뭘까?', 'https:' + img_url[0].attribs.src);
+    img_url = $("meta[property='og:image']").attr('content');
 
     const new_product = {
       product_name: product_name,
@@ -117,12 +112,12 @@ const Popup = () => {
       sale_price: sale_price,
       shop_name: shop_name,
       shop_url: shop_url,
-      img: parsed_img_url,
+      img: img_url,
     };
     return new_product;
   }
 
-  // seoul store
+  // 브랜디
   function brandi(html, url) {
     let shop_name, img_url, product_name, price, sale_price, shop_url;
     const $ = cheerio.load(html); // html load
@@ -212,31 +207,22 @@ const Popup = () => {
     });
   }
 
-  function cartClick(event) {
-    console.log('카트 입니다');
-    var authToken = '';
-    chrome.storage.local.get(['userStatus'], function (items) {
-      authToken = items.userStatus;
-      console.log(`authToken??? : ${authToken}`);
-      axios
-        .post('http://127.0.0.1:8000/privatebasket/basket', {
-          token: authToken,
-        })
-        .then((Response) => {
-          console.log('save success:', Response.data);
-        })
-        .catch((Error) => {
-          console.log(Error);
-        });
-    });
-  }
-
   return (
     <div className="popup">
-      <span>이 옷을 내 장바구니에 넣으시겠습니까?</span>
+      <header>
+        <span>MOBA</span>
+      </header>
       <div id="imageBox"></div>
-      <button onClick={handleClick}>전송하기</button>
-      <button onClick={cartClick}>장바구니 확인하기</button>
+      <button onClick={handleClick}>추가하기</button>
+      <h3>내 장바구니</h3>
+      {products.map((item, index) => (
+        <div key={index} className="container">
+          <img src={item.img} alt="img" />
+          <h4>{item.shop_name}</h4>
+          <span>{item.product_name}</span>
+          <h4>{item.sale_price}</h4>
+        </div>
+      ))}
     </div>
   );
 };

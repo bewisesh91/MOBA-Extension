@@ -1,4 +1,32 @@
 .imageBox {
   display: flex;
+  border: 2px solid black;
+}
+header {
+  background-color: black;
+  color: #f37423;
+}
+header span {
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 3px;
+}
+.title {
+  font-size: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+img {
+  width: 100px;
+  height: 100px;
+}
+.image__description {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
+}
+
+.image__description p {
+  font-size: 30px;
 }
