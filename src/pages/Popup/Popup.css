@@ -1,8 +1,25 @@
-.imageBox {
+#imageBox {
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  margin: 10px;
+  position: relative;
+  border-radius: 10px;
+  transition: all 235ms ease-in-out;
+}
+.currentTitleBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.currentTitle {
+  font-size: 20px;
+  font-weight: 600;
+}
+.currentImg {
+  width: 130px;
+  height: auto;
 }
 header {
   background-color: black;
@@ -10,7 +27,7 @@ header {
 }
 header span {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   margin-left: 3px;
 }
 .title {
@@ -28,10 +45,38 @@ img {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-left: 20px;
 }
 
 .image__description p {
-  font-size: 30px;
+  font-size: 14px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.image__description p:first-child {
+  font-size: 1.4em;
+  font-weight: 600;
+}
+.image__description p:last-child {
+  font-size: 1.4em;
+  font-weight: 600;
+}
+.button__container {
+  width: 100px;
+  height: 110px;
+}
+#addBtn {
+  position: absolute;
+  top: 154px;
+  left: 350px;
+  background-color: #f37423;
+  color: white;
+  margin: 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 28px;
 }
 .myBasket {
   display: flex;
@@ -39,7 +84,11 @@ img {
   align-items: center;
   flex-wrap: wrap;
 }
-
+.myBasket__title {
+  font-weight: 600;
+  font-size: 20px;
+  margin-left: 35px;
+}
 .container {
   width: 120px;
   height: 180px;
@@ -50,8 +99,12 @@ img {
   text-overflow: ellipsis;
   white-space: nowrap;
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  transition: all 235ms ease-in-out;
 }
-
+.container:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
 .container p {
   margin: 0;
 }

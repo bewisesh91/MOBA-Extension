@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './Popup.css';
 const cheerio = require('cheerio');
 const axios = require('axios');
 let new_product;
 
-const Popup = () => {
-  console.log('무한 재시작');
-  const [products, setProducts] = useState([]);
-  const [curProducts, setCurProducts] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+const Popup = React.memo(function Popup(props) {
+  // 공부해서 useState 쓰고싶다...
+  // const [products, setProducts] = useState([]);
+  // const [curProducts, setCurProducts] = useState({});
+  // const [isLoading, setIsLoading] = useState(true);
 
   let authToken = '';
   chrome.storage.local.get(['userStatus'], function (items) {
@@ -20,45 +20,67 @@ const Popup = () => {
       })
       .then((Response) => {
         console.log('내 장바구니 상품들', Response.data);
-        setProducts(Response.data);
+        const myBasket = document.querySelector('.myBasket');
+        let temp = '';
+        for (let i = 0; i < Response.data.length; i++) {
+          temp += `
+          <div class="container">
+              <img src=${Response.data[i].img} alt="img" />
+              <p>
+                <strong>${Response.data[i].shop_name}</strong>
+              </p>
+              <p>${Response.data[i].product_name}</p>
+              <p>
+                <strong>${Response.data[i].sale_price}</strong>
+              </p>
+            </div>
+          `;
+        }
+        myBasket.innerHTML += temp;
+        // myBasket.addClass("")
+        // setProducts(Response.data);
       })
       .catch((Error) => {
         console.log(Error);
       });
   });
-  setIsLoading(true);
+
   chrome.tabs.query(
     { currentWindow: true, active: true },
     async function (tabs) {
       const shopUrl = tabs[0].url;
-      console.log('shopUrl:', shopUrl);
-      axios
-        .post('http://127.0.0.1:8000/privatebasket/basketParsing', {
-          shopUrl: shopUrl,
-        })
-        .then((Response) => {
-          console.log('파싱 결과', Response.data);
-        });
+      new_product = await parse_product(shopUrl);
+      // console.log('현재 상품:', new_product);
+      // console.log('shopUrl:', shopUrl);
+      // axios
+      //   .post('http://127.0.0.1:8000/privatebasket/basketParsing', {
+      //     shopUrl: shopUrl,
+      //   })
+      //   .then((Response) => {
+      //     // setIsLoading(false);
+      //     console.log('파싱결과받기:', Response.data);
+      //     // setCurProducts(Response.data);
+      //   });
 
-      // let imageBox = document.querySelector('#imageBox');
-      // let totalImg = '';
+      let imageBox = document.querySelector('#imageBox');
+      let totalImg = '';
 
-      // let imageUrl = new_product.img;
-      // let product_name = new_product.product_name;
-      // let sale_price = new_product.sale_price;
-      // let shop_name = new_product.shop_name;
+      let imageUrl = new_product.img;
+      let product_name = new_product.product_name;
+      let sale_price = new_product.sale_price;
+      let shop_name = new_product.shop_name;
 
-      // totalImg = `
-      //   <div className='image__container'>
-      //   <img className='currentImg' src=${imageUrl} alt='img1'/>
-      //   </div>
-      //   <div className='image__description'>
-      //   <p>${shop_name}</p>
-      //   <p>${product_name}</p>
-      //   <p>${sale_price}</p>
-      //   </div>
-      //   `;
-      // imageBox.innerHTML = totalImg;
+      totalImg = `
+        <div class='image__container'>
+        <img class='currentImg' src=${imageUrl} alt='img1'/>
+        </div>
+        <div class='image__description'>
+        <p>${shop_name}</p>
+        <p>${product_name}</p>
+        <p>${sale_price} 원</p>
+        </div>
+        `;
+      imageBox.innerHTML = totalImg;
     }
   );
   // w-concept
@@ -198,7 +220,7 @@ const Popup = () => {
     return new_product;
   }
 
-  function handleClick(event) {
+  function handleClick() {
     console.log('np', new_product);
     var authToken = '';
     chrome.storage.local.get(['userStatus'], function (items) {
@@ -223,24 +245,41 @@ const Popup = () => {
       <header>
         <span>MOBA</span>
       </header>
-      <div id="imageBox">
-        {isLoading ? (
-          <div>
-            <span>로딩중</span>
-          </div>
-        ) : (
-          <div className="image__container">
-            <img src={curProducts.img} alt="img" />
-            <h4>{curProducts.shop_name}</h4>
-            <span>{curProducts.product_name}</span>
-            <h4>{curProducts.sale_price}</h4>
-          </div>
-        )}
+      <div className="currentTitleBox">
+        <span className="currentTitle">지금 보고있는 상품</span>
       </div>
-      <button onClick={handleClick}>추가하기</button>
-      <h3>내 장바구니</h3>
+      <div className="currentBox">
+        <div id="imageBox">
+          {/* {
+          (isLoading ? (
+            <div>
+              <span>로딩중</span>
+            </div>
+          ) : (
+            <div className="image__container">
+              <img src={curProducts.img} alt="img" />
+              <h4>{curProducts.shop_name}</h4>
+              <span>{curProducts.product_name}</span>
+              <h4>{curProducts.sale_price}</h4>
+            </div>
+          ),
+          console.log('curProducts!', curProducts))
+        } */}
+          {/* {console.log('curProducts!', curProducts)}
+        <div className="image__container">
+          <img src={curProducts.img} alt="img" />
+          <h4>{curProducts.shop_name}</h4>
+          <span>{curProducts.product_name}</span>
+          <h4>{curProducts.sale_price}</h4>
+        </div> */}
+        </div>
+        <button id="addBtn" onClick={handleClick}>
+          추가하기
+        </button>
+      </div>
+      <span className="myBasket__title">내 장바구니</span>
       <div className="myBasket">
-        {products.map((item, index) => (
+        {/* {products.map((item, index) => (
           <div key={index} className="container">
             <img src={item.img} alt="img" />
             <p>
@@ -251,10 +290,10 @@ const Popup = () => {
               <strong>{item.sale_price}</strong>
             </p>
           </div>
-        ))}
+        ))} */}
       </div>
     </div>
   );
-};
+});
 
 export default Popup;
