@@ -1,6 +1,8 @@
 .imageBox {
   display: flex;
-  border: 2px solid black;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
 }
 header {
   background-color: black;
@@ -18,7 +20,8 @@ header span {
 }
 img {
   width: 100px;
-  height: 100px;
+  height: 110px;
+  border-radius: 10px;
 }
 .image__description {
   display: flex;
@@ -29,4 +32,26 @@ img {
 
 .image__description p {
   font-size: 30px;
+}
+.myBasket {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.container {
+  width: 120px;
+  height: 180px;
+  padding: 7px;
+  margin: 7px;
+  border-radius: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+}
+
+.container p {
+  margin: 0;
 }

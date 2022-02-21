@@ -5,7 +5,9 @@ const axios = require('axios');
 let new_product;
 
 const Popup = () => {
+  console.log('무한 재시작');
   const [products, setProducts] = useState([]);
+  // const [curProducts, setCurProducts] = useState();
 
   let authToken = '';
   chrome.storage.local.get(['userStatus'], function (items) {
@@ -16,7 +18,7 @@ const Popup = () => {
         token: authToken,
       })
       .then((Response) => {
-        console.log('save success:', Response.data);
+        console.log('내 장바구니 상품들', Response.data);
         setProducts(Response.data);
       })
       .catch((Error) => {
@@ -29,6 +31,9 @@ const Popup = () => {
     async function (tabs) {
       const shopUrl = tabs[0].url;
       new_product = await parse_product(shopUrl);
+      console.log('현재 상품:', new_product);
+      // setCurProducts(new_product);
+
       let imageBox = document.querySelector('#imageBox');
       let totalImg = '';
 
@@ -47,7 +52,7 @@ const Popup = () => {
         <p>${sale_price}</p>
         </div>
         `;
-      imageBox.innerHTML += totalImg;
+      imageBox.innerHTML = totalImg;
     }
   );
   // w-concept
@@ -212,17 +217,30 @@ const Popup = () => {
       <header>
         <span>MOBA</span>
       </header>
-      <div id="imageBox"></div>
+      <div id="imageBox">
+        {/* <div key={curProducts.index} className="image__container">
+          <img src={curProducts.img} alt="img" />
+          <h4>{curProducts.shop_name}</h4>
+          <span>{curProducts.product_name}</span>
+          <h4>{curProducts.sale_price}</h4>
+        </div> */}
+      </div>
       <button onClick={handleClick}>추가하기</button>
       <h3>내 장바구니</h3>
-      {products.map((item, index) => (
-        <div key={index} className="container">
-          <img src={item.img} alt="img" />
-          <h4>{item.shop_name}</h4>
-          <span>{item.product_name}</span>
-          <h4>{item.sale_price}</h4>
-        </div>
-      ))}
+      <div className="myBasket">
+        {products.map((item, index) => (
+          <div key={index} className="container">
+            <img src={item.img} alt="img" />
+            <p>
+              <strong>{item.shop_name}</strong>
+            </p>
+            <p>{item.product_name}</p>
+            <p>
+              <strong>{item.sale_price}</strong>
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
