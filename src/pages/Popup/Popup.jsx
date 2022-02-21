@@ -7,7 +7,8 @@ let new_product;
 const Popup = () => {
   console.log('무한 재시작');
   const [products, setProducts] = useState([]);
-  // const [curProducts, setCurProducts] = useState();
+  const [curProducts, setCurProducts] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   let authToken = '';
   chrome.storage.local.get(['userStatus'], function (items) {
@@ -25,34 +26,38 @@ const Popup = () => {
         console.log(Error);
       });
   });
-
+  setIsLoading(true);
   chrome.tabs.query(
     { currentWindow: true, active: true },
     async function (tabs) {
       const shopUrl = tabs[0].url;
+      console.log('shopUrl:', shopUrl);
+      axios.post('http://127.0.0.1:8000/');
       new_product = await parse_product(shopUrl);
+      setIsLoading(false);
+      console.log('loading:', isLoading);
       console.log('현재 상품:', new_product);
-      // setCurProducts(new_product);
+      setCurProducts(new_product);
 
-      let imageBox = document.querySelector('#imageBox');
-      let totalImg = '';
+      // let imageBox = document.querySelector('#imageBox');
+      // let totalImg = '';
 
-      let imageUrl = new_product.img;
-      let product_name = new_product.product_name;
-      let sale_price = new_product.sale_price;
-      let shop_name = new_product.shop_name;
+      // let imageUrl = new_product.img;
+      // let product_name = new_product.product_name;
+      // let sale_price = new_product.sale_price;
+      // let shop_name = new_product.shop_name;
 
-      totalImg = `
-        <div className='image__container'>
-        <img className='currentImg' src=${imageUrl} alt='img1'/>
-        </div>
-        <div className='image__description'>
-        <p>${shop_name}</p>
-        <p>${product_name}</p>
-        <p>${sale_price}</p>
-        </div>
-        `;
-      imageBox.innerHTML = totalImg;
+      // totalImg = `
+      //   <div className='image__container'>
+      //   <img className='currentImg' src=${imageUrl} alt='img1'/>
+      //   </div>
+      //   <div className='image__description'>
+      //   <p>${shop_name}</p>
+      //   <p>${product_name}</p>
+      //   <p>${sale_price}</p>
+      //   </div>
+      //   `;
+      // imageBox.innerHTML = totalImg;
     }
   );
   // w-concept
@@ -218,12 +223,18 @@ const Popup = () => {
         <span>MOBA</span>
       </header>
       <div id="imageBox">
-        {/* <div key={curProducts.index} className="image__container">
-          <img src={curProducts.img} alt="img" />
-          <h4>{curProducts.shop_name}</h4>
-          <span>{curProducts.product_name}</span>
-          <h4>{curProducts.sale_price}</h4>
-        </div> */}
+        {isLoading ? (
+          <div>
+            <span>로딩중</span>
+          </div>
+        ) : (
+          <div className="image__container">
+            <img src={curProducts.img} alt="img" />
+            <h4>{curProducts.shop_name}</h4>
+            <span>{curProducts.product_name}</span>
+            <h4>{curProducts.sale_price}</h4>
+          </div>
+        )}
       </div>
       <button onClick={handleClick}>추가하기</button>
       <h3>내 장바구니</h3>
