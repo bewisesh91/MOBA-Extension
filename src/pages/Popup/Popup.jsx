@@ -32,12 +32,13 @@ const Popup = () => {
     async function (tabs) {
       const shopUrl = tabs[0].url;
       console.log('shopUrl:', shopUrl);
-      axios.post('http://127.0.0.1:8000/');
-      new_product = await parse_product(shopUrl);
-      setIsLoading(false);
-      console.log('loading:', isLoading);
-      console.log('현재 상품:', new_product);
-      setCurProducts(new_product);
+      axios
+        .post('http://127.0.0.1:8000/privatebasket/basketParsing', {
+          shopUrl: shopUrl,
+        })
+        .then((Response) => {
+          console.log('파싱 결과', Response.data);
+        });
 
       // let imageBox = document.querySelector('#imageBox');
       // let totalImg = '';
