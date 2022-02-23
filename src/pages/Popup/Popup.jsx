@@ -229,7 +229,7 @@ const Popup = React.memo(function Popup(props) {
     // canvas에 이미지 복제
     let ctx = canvas.getContext('2d');
     console.log(ctx, 'ctx');
-    originalImg.onload = function () {
+    originalImg.onload = async function () {
       console.log(originalImg, 'original img!');
       canvas.width = originalImg.naturalWidth;
       canvas.height = originalImg.naturalHeight;
@@ -254,9 +254,42 @@ const Popup = React.memo(function Popup(props) {
       removedBgImg = canvas.toDataURL('image/png');
       console.log(removedBgImg, 'return 전 removedBg');
 
-      //누끼딴거 넣어주기
-      new_product.removedBgImg = removedBgImg;
+      /** ---------------- S3  start ---------------- */
+      // get secure S3 url from our server
+      const target =
+        'http://127.0.0.1:8000/s3Url/' +
+        new_product.img
+          .split('https://')[1]
+          .split('.jpg')[0]
+          .replaceAll('/', '-');
+      const S3url = await fetch(target).then((res) => res.json());
+      console.log(S3url);
+
+      // make ascii to binary file
+      let bstr = atob(removedBgImg.split(',')[1]);
+      let n = bstr.length;
+      let u8arr = new Uint8Array(n);
+
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+
+      let file = new File([u8arr], 'imgFile.png', { type: 'mime' });
+
+      await fetch(S3url.url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: file,
+      });
+
+      // put S3 removedBgImg url in new_product info
+      const imageUrl = S3url.url.split('?')[0];
+      console.log(imageUrl);
+      new_product.removedBgImg = imageUrl;
       console.log(new_product, 'new_product@#!#!');
+      /** ---------------- S3  end ---------------- */
 
       chrome.storage.local.get(['userStatus'], function (items) {
         const authToken = items.userStatus;
