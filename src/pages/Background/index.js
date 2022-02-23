@@ -1,6 +1,8 @@
 console.log('This is the background page.');
 console.log('Put the background scripts here.');
 
+// importScripts('jquery.min.js');
+
 // // 특정 페이지에서만 동작하도록 변경
 // chrome.runtime.onInstalled.addListener(function () {
 //   chrome.action.disable();

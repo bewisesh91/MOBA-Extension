@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import './Popup.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const cheerio = require('cheerio');
 const axios = require('axios');
-// import { ToastContainer, toast } from "react-toastify";
 let new_product;
 
 const Popup = React.memo(function Popup(props) {
@@ -10,6 +12,15 @@ const Popup = React.memo(function Popup(props) {
   // const [products, setProducts] = useState([]);
   // const [curProducts, setCurProducts] = useState({});
   // const [isLoading, setIsLoading] = useState(true);
+
+  // chrome.storage.local.get(['moba'], function (items) {
+  //   if (typeof items.moba == 'undefined') {
+  //     console.log('ㅜㅡㅜ');
+  //   } else {
+  //     console.log(items.moba, 'items.count');
+  //     console.log(items, 'items');
+  //   }
+  // });
 
   let authToken = '';
   chrome.storage.local.get(['userStatus'], function (items) {
@@ -50,19 +61,16 @@ const Popup = React.memo(function Popup(props) {
     { currentWindow: true, active: true },
     async function (tabs) {
       const shopUrl = tabs[0].url;
-      new_product = await parse_product(shopUrl);
-      // console.log('현재 상품:', new_product);
-      // console.log('shopUrl:', shopUrl);
-      // axios
-      //   .post('http://127.0.0.1:8000/privatebasket/basketParsing', {
-      //     shopUrl: shopUrl,
-      //   })
-      //   .then((Response) => {
-      //     // setIsLoading(false);
-      //     console.log('파싱결과받기:', Response.data);
-      //     // setCurProducts(Response.data);
-      //   });
+      chrome.storage.local.set({ moba: shopUrl });
 
+      chrome.tabs.sendMessage(tabs[0].id, { shopUrl: shopUrl }, (response) => {
+        console.log(response, 'response!!!!!!!@'); // Yeah
+      });
+
+      new_product = await parse_product(shopUrl);
+      chrome.storage.local.get(['products'], function (items) {
+        console.log(items.products, 'item.products');
+      });
       let imageBox = document.querySelector('#imageBox');
       let totalImg = '';
 
@@ -195,6 +203,8 @@ const Popup = React.memo(function Popup(props) {
         cur_shop
       )
     ) {
+      //contents에서 해보자
+
       await axios
         .get(url)
         .then((dataa) => {
@@ -268,6 +278,18 @@ const Popup = React.memo(function Popup(props) {
           })
           .then((response) => {
             console.log(response, 'response');
+            toast.success('장바구니 담기 완료!', {
+              position: 'top-center',
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1800);
           })
           .catch((Error) => {
             console.log(Error);
@@ -276,9 +298,9 @@ const Popup = React.memo(function Popup(props) {
     };
   }
 
-  function handleClick() {
+  async function handleClick() {
     console.log('np', new_product);
-    removeBackground(new_product);
+    await removeBackground(new_product);
   }
 
   return (
@@ -294,6 +316,17 @@ const Popup = React.memo(function Popup(props) {
       <div className="currentTitleBox">
         <span className="currentTitle">지금 보고있는 상품</span>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="currentBox">
         <div id="imageBox">
           {/* {
