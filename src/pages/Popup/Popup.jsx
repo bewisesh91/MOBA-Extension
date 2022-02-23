@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import './Popup.css';
 const cheerio = require('cheerio');
 const axios = require('axios');
+// import { ToastContainer, toast } from "react-toastify";
 let new_product;
 
 const Popup = React.memo(function Popup(props) {
@@ -22,7 +23,7 @@ const Popup = React.memo(function Popup(props) {
         console.log('내 장바구니 상품들', Response.data);
         const myBasket = document.querySelector('.myBasket');
         let temp = '';
-        for (let i = 0; i < Response.data.length; i++) {
+        for (let i = Response.data.length - 1; 0 <= i; i--) {
           temp += `
           <div class="container">
               <img src=${Response.data[i].img} alt="img" />
@@ -220,105 +221,64 @@ const Popup = React.memo(function Popup(props) {
     return new_product;
   }
 
-  function ImageLoader(url) {
-    console.log('image loader 들어옴');
-    console.log('url', url);
-    var imgxhr = new XMLHttpRequest();
-    imgxhr.open('GET', url + '?' + new Date().getTime());
-    imgxhr.responseType = 'blob';
-    imgxhr.onload = function () {
-      if (imgxhr.status === 200) {
-        reader.readAsDataURL(imgxhr.response);
+  async function removeBackground(new_product) {
+    const canvas = document.querySelector('#myCanvas');
+    const originalImg = document.querySelector('.img__original');
+    let removedBgImg;
+    originalImg.src = new_product.img; //불러온 이미지로 변경
+    // canvas에 이미지 복제
+    let ctx = canvas.getContext('2d');
+    console.log(ctx, 'ctx');
+    originalImg.onload = function () {
+      console.log(originalImg, 'original img!');
+      canvas.width = originalImg.naturalWidth;
+      canvas.height = originalImg.naturalHeight;
+      ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
+      // 복제된 이미지에 대한 pixel정보 가져옴
+      let _id = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      console.log(_id, 'id');
+      // 픽셀 순회
+      for (var i = 0; i < _id.data.length; i += 4) {
+        if (
+          _id.data[i] === 255 &&
+          _id.data[i + 1] === 255 &&
+          _id.data[i + 2] === 255
+        ) {
+          _id.data[i] = 0;
+          _id.data[i + 1] = 0;
+          _id.data[i + 2] = 0;
+          _id.data[i + 3] = 0;
+        }
       }
+      ctx.putImageData(_id, 0, 0);
+      removedBgImg = canvas.toDataURL('image/png');
+      console.log(removedBgImg, 'return 전 removedBg');
+
+      //누끼딴거 넣어주기
+      new_product.removedBgImg = removedBgImg;
+      console.log(new_product, 'new_product@#!#!');
+
+      chrome.storage.local.get(['userStatus'], function (items) {
+        const authToken = items.userStatus;
+
+        axios
+          .post('http://127.0.0.1:8000/privatebasket', {
+            token: authToken,
+            products: [new_product],
+          })
+          .then((response) => {
+            console.log(response, 'response');
+          })
+          .catch((Error) => {
+            console.log(Error);
+          });
+      });
     };
-    var reader = new FileReader();
-    reader.onloadend = function () {
-      // document.getElementById('image').src = reader.result;
-      chrome.storage.local.set({ Image: reader.result });
-    };
-    imgxhr.send();
   }
 
   function handleClick() {
     console.log('np', new_product);
-    var authToken = '';
-    ImageLoader(new_product.img); // 이미지 크롬 스토리지에 저장
-    // 크롬스토리지에서 가져옴
-    chrome.storage.local.get(['Image'], function (items) {
-      let image = items.Image;
-      // let image =
-      //   'https://image.msscdn.net/images/goods_img/20190122/937525/937525_3_125.jpg';
-      console.log(image, '가져온 이미지');
-
-      const canvas = document.querySelector('#myCanvas');
-      const originalImg = document.querySelector('.img__original');
-      originalImg.src = image; //불러온 이미지로 변경
-
-      console.log(document, 'document');
-      console.log(originalImg, 'originalImg');
-
-      console.log(canvas, 'canvas');
-      console.log(canvas.height, 'canvas.height'); //됨
-
-      // canvas에 이미지 복제
-      let ctx = canvas.getContext('2d');
-      console.log(ctx, 'ctx');
-      originalImg.onload = function () {
-        ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
-        // 복제된 이미지에 대한 pixel정보 가져옴
-        let _id = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        console.log(_id, 'id');
-        // 픽셀 순회
-        for (var i = 0; i < _id.data.length; i += 4) {
-          if (
-            _id.data[i] === 255 &&
-            _id.data[i + 1] === 255 &&
-            _id.data[i + 2] === 255
-          ) {
-            _id.data[i] = 0;
-            _id.data[i + 1] = 0;
-            _id.data[i + 2] = 0;
-            _id.data[i + 3] = 0;
-          }
-        }
-        ctx.putImageData(_id, 0, 0);
-        let answer = canvas.toDataURL('image/png');
-        console.log(answer, '누끼 따진 애');
-      };
-    });
-
-    // chrome.storage.local.remove(['Image'], function () {
-    //   console.log('삭제 성공!');
-    // });
-    // chrome.storage.local.get(['Image'], function (items) {
-    //   let image = items.Image;
-    //   console.log(image, ' after image del!!');
-    // });
-
-    chrome.storage.local.get(['userStatus'], function (items) {
-      authToken = items.userStatus;
-      console.log(`hihihihihi : ${authToken}`);
-
-      axios
-        .all([
-          axios.post('http://127.0.0.1:8000/privatebasket', {
-            token: authToken,
-            products: [new_product],
-          }),
-          // axios.post('http://127.0.0.1:8000/removebg', {
-          //   token: authToken,
-          //   products: [new_product],
-          // }),
-        ])
-        .then(
-          axios.spread((res1, res2) => {
-            console.log(res1, res2);
-          })
-        )
-        .catch((Error) => {
-          console.log(Error);
-        });
-    });
+    removeBackground(new_product);
   }
 
   return (
@@ -326,7 +286,7 @@ const Popup = React.memo(function Popup(props) {
       <header>
         <span>MOBA</span>
       </header>
-      <div>
+      <div style={{ display: 'none' }}>
         <img className="img__original" alt="img" />
         <h1>RemoveBackground Page</h1>
         <canvas id="myCanvas"></canvas>
