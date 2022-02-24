@@ -95,7 +95,7 @@ img {
   padding: 7px;
   margin: 7px;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: scroll;
   text-overflow: ellipsis;
   white-space: nowrap;
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
