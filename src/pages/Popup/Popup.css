@@ -109,3 +109,7 @@ img {
 .container p {
   margin: 0;
 }
+
+.userInputBox{
+  display: none;
+}

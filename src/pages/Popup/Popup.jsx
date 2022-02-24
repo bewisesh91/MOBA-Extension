@@ -45,6 +45,7 @@ const Popup = React.memo(function Popup(props) {
               <p>
                 <strong>${Response.data[i].sale_price}</strong>
               </p>
+              <button id="deleteBtn${i}" onClick={deleteItem(${authToken}, ${Response.data[i]}, ${Response.data[i].shop_url})}> 상품 삭제 </button>
             </div>
           `;
         }
@@ -68,9 +69,6 @@ const Popup = React.memo(function Popup(props) {
       });
 
       new_product = await parse_product(shopUrl);
-      chrome.storage.local.get(['products'], function (items) {
-        console.log(items.products, 'item.products');
-      });
       let imageBox = document.querySelector('#imageBox');
       let totalImg = '';
 
@@ -204,6 +202,7 @@ const Popup = React.memo(function Popup(props) {
         cur_shop
       )
     ) {
+      document.querySelector('.conditionalInputBox').style.display = 'none';
       await axios
         .get(url)
         .then((dataa) => {
@@ -226,6 +225,9 @@ const Popup = React.memo(function Popup(props) {
           // 리퀘스트 실패 - then 보다 catch 가 먼저 실행됨..
           console.log('get shopping mall html request is failed')
         );
+    } else {
+      document.querySelector('#imageBox').style.display = 'none';
+      const userInput = document.querySelector('.conditionalInputBox');
     }
     return new_product;
   }
@@ -306,6 +308,14 @@ const Popup = React.memo(function Popup(props) {
     chrome.tabs.create({ url: 'localhost:3000/createroom' });
   }
 
+  function deleteItem(authToken, product, shop_url) {
+    axios.delete('http://127.0.0.1:8000/privatebasket/', {
+      token: authToken,
+      products: product,
+      shop_url: shop_url,
+    });
+  }
+
   return (
     <div className="popup">
       <header>
@@ -331,6 +341,12 @@ const Popup = React.memo(function Popup(props) {
         pauseOnHover
       />
       <div className="currentBox">
+        <div className="conditionalInputBox">
+          <input type="url"></input>
+          <input type="text"></input>
+          <input type="text"></input>
+          <button id="inputBoxBtn">제출</button>
+        </div>
         <div id="imageBox">
           {/* {
           (isLoading ? (
