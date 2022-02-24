@@ -9,7 +9,7 @@ let new_product;
 
 const Popup = React.memo(function Popup(props) {
   // 공부해서 useState 쓰고싶다...
-  // const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   // const [curProducts, setCurProducts] = useState({});
   // const [isLoading, setIsLoading] = useState(true);
 
@@ -32,26 +32,26 @@ const Popup = React.memo(function Popup(props) {
       })
       .then((Response) => {
         console.log('내 장바구니 상품들', Response.data);
-        const myBasket = document.querySelector('.myBasket');
-        let temp = '';
-        for (let i = Response.data.length - 1; 0 <= i; i--) {
-          temp += `
-          <div class="container">
-              <img src=${Response.data[i].img} alt="img" />
-              <p>
-                <strong>${Response.data[i].shop_name}</strong>
-              </p>
-              <p>${Response.data[i].product_name}</p>
-              <p>
-                <strong>${Response.data[i].sale_price}</strong>
-              </p>
-              <button id="deleteBtn${i}" onClick={deleteItem(${authToken}, ${Response.data[i]}, ${Response.data[i].shop_url})}> 상품 삭제 </button>
-            </div>
-          `;
-        }
-        myBasket.innerHTML += temp;
+        // const myBasket = document.querySelector('.myBasket');
+        // let temp = '';
+        // for (let i = Response.data.length - 1; 0 <= i; i--) {
+        //   temp += `
+        //   <div class="container">
+        //       <img src=${Response.data[i].img} alt="img" />
+        //       <p>
+        //         <strong>${Response.data[i].shop_name}</strong>
+        //       </p>
+        //       <p>${Response.data[i].product_name}</p>
+        //       <p>
+        //         <strong>${Response.data[i].sale_price}</strong>
+        //       </p>
+        //       <button id="deleteBtn${i}" onClick={deleteItem(${authToken}, ${Response.data[i]}, ${Response.data[i].shop_url})}> 상품 삭제 </button>
+        //     </div>
+        //   `;
+        // }
+        // myBasket.innerHTML += temp;
         // myBasket.addClass("")
-        // setProducts(Response.data);
+        setProducts(Response.data);
       })
       .catch((Error) => {
         console.log(Error);
@@ -62,11 +62,6 @@ const Popup = React.memo(function Popup(props) {
     { currentWindow: true, active: true },
     async function (tabs) {
       const shopUrl = tabs[0].url;
-      chrome.storage.local.set({ moba: shopUrl });
-
-      chrome.tabs.sendMessage(tabs[0].id, { shopUrl: shopUrl }, (response) => {
-        console.log(response, 'response!!!!!!!@'); // Yeah
-      });
 
       new_product = await parse_product(shopUrl);
       let imageBox = document.querySelector('#imageBox');
@@ -383,7 +378,6 @@ const Popup = React.memo(function Popup(props) {
         </button>
       </div>
 
-      {/* 혁주 여기 고쳐놨음 여기 수정하면됨 */}
       <div className="myBasket__container">
         <span className="myBasket__title">내 장바구니</span>
         <button className="mobaBtn" onClick={moveToMain}>
@@ -391,7 +385,7 @@ const Popup = React.memo(function Popup(props) {
         </button>
       </div>
       <div className="myBasket">
-        {/* {products.map((item, index) => (
+        {products.map((item, index) => (
           <div key={index} className="container">
             <img src={item.img} alt="img" />
             <p>
@@ -402,7 +396,7 @@ const Popup = React.memo(function Popup(props) {
               <strong>{item.sale_price}</strong>
             </p>
           </div>
-        ))} */}
+        ))}
       </div>
     </div>
   );
