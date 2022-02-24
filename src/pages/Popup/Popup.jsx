@@ -260,7 +260,6 @@ const Popup = React.memo(function Popup(props) {
         'http://127.0.0.1:8000/s3Url/' +
         new_product.img
           .split('https://')[1]
-          .split('.jpg')[0]
           .replaceAll('/', '-');
       const S3url = await fetch(target).then((res) => res.json());
       console.log(S3url);
