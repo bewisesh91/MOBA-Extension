@@ -1,3 +1,11 @@
+/* .popup {
+  background-color: black;
+} */
+.loading__oval {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 #imageBox {
   display: flex;
   justify-content: center;
@@ -7,8 +15,11 @@
   position: relative;
   border-radius: 10px;
   transition: all 235ms ease-in-out;
+  padding: 5px;
+  margin-top: 0;
 }
 .currentTitleBox {
+  margin-top: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,6 +31,11 @@
 .currentImg {
   width: 130px;
   height: 150px;
+}
+.image__container {
+  display: flex;
+  flex: 2 2;
+  justify-content: center;
 }
 header {
   background-color: black;
@@ -37,9 +53,14 @@ header {
   border-radius: 5px;
   cursor: pointer;
   height: 28px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   margin-right: 30px;
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  transition: all 235ms ease-in-out;
+}
+.mobaBtn:hover {
+  transform: scale(1.1);
 }
 header span {
   font-size: 20px;
@@ -61,7 +82,7 @@ img {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-left: 20px;
+  flex: 3 3;
 }
 
 .image__description p {
@@ -78,22 +99,28 @@ img {
   font-size: 1.4em;
   font-weight: 600;
 }
-.button__container {
-  width: 100px;
-  height: 110px;
+.image__addBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 1;
 }
 #addBtn {
-  position: absolute;
-  top: 155px;
-  left: 350px;
   background-color: #f37423;
   color: white;
+  width: 60px;
+  height: 40px;
   margin: 0;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  height: 28px;
+  font-size: 18px;
+  font-weight: 600;
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  transition: all 235ms ease-in-out;
+}
+#addBtn:hover {
+  transform: scale(1.06);
 }
 .myBasket__container {
   display: flex;
@@ -109,6 +136,7 @@ img {
   align-items: center;
   flex-wrap: wrap;
   overflow: auto;
+  padding: 6px;
 }
 .myBasket__title {
   font-weight: 600;
@@ -135,6 +163,6 @@ img {
   margin: 0;
 }
 
-.userInputBox{
+.userInputBox {
   display: none;
 }

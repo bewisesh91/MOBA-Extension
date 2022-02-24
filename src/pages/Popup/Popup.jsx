@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import './Popup.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import { ThreeDots } from 'react-loader-spinner';
 
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -10,18 +12,9 @@ let flag = true;
 
 const Popup = React.memo(function Popup(props) {
   // 공부해서 useState 쓰고싶다...
-  // const [products, setProducts] = useState([]);
-  // const [curProducts, setCurProducts] = useState({});
-  // const [isLoading, setIsLoading] = useState(true);
-
-  // chrome.storage.local.get(['moba'], function (items) {
-  //   if (typeof items.moba == 'undefined') {
-  //     console.log('ㅜㅡㅜ');
-  //   } else {
-  //     console.log(items.moba, 'items.count');
-  //     console.log(items, 'items');
-  //   }
-  // });
+  const [products, setProducts] = useState([]);
+  const [curProducts, setCurProducts] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   let authToken = '';
   if (flag) {
@@ -35,26 +28,7 @@ const Popup = React.memo(function Popup(props) {
         })
         .then((Response) => {
           console.log('내 장바구니 상품들', Response.data);
-          const myBasket = document.querySelector('.myBasket');
-          let temp = '';
-          for (let i = Response.data.length - 1; 0 <= i; i--) {
-            temp += `
-          <div class="container">
-              <img src=${Response.data[i].img} alt="img" />
-              <p>
-                <strong>${Response.data[i].shop_name}</strong>
-              </p>
-              <p>${Response.data[i].product_name}</p>
-              <p>
-                <strong>${Response.data[i].sale_price}</strong>
-              </p>
-              <button id="deleteBtn${i}" onClick={deleteItem(${authToken}, ${Response.data[i]}, ${Response.data[i].shop_url})}> 상품 삭제 </button>
-            </div>
-          `;
-          }
-          myBasket.innerHTML += temp;
-          // myBasket.addClass("")
-          // setProducts(Response.data);
+          setProducts(Response.data);
         })
         .catch((Error) => {
           console.log(Error);
@@ -64,38 +38,21 @@ const Popup = React.memo(function Popup(props) {
     chrome.tabs.query(
       { currentWindow: true, active: true },
       async function (tabs) {
+        setIsLoading(true);
         const shopUrl = tabs[0].url;
-        chrome.storage.local.set({ moba: shopUrl });
+        // chrome.storage.local.set({ moba: shopUrl });
 
-        chrome.tabs.sendMessage(
-          tabs[0].id,
-          { shopUrl: shopUrl },
-          (response) => {
-            console.log(response, 'response!!!!!!!@'); // Yeah
-          }
-        );
+        // chrome.tabs.sendMessage(
+        //   tabs[0].id,
+        //   { shopUrl: shopUrl },
+        //   (response) => {
+        //     console.log(response, 'response!!!!!!!@'); // Yeah
+        //   }
+        // );
 
         new_product = await parse_product(shopUrl);
-
-        let imageBox = document.querySelector('#imageBox');
-        let totalImg = '';
-
-        let imageUrl = new_product.img;
-        let product_name = new_product.product_name;
-        let sale_price = new_product.sale_price;
-        let shop_name = new_product.shop_name;
-
-        totalImg = `
-        <div class='image__container'>
-        <img class='currentImg' src=${imageUrl} alt='img1'/>
-        </div>
-        <div class='image__description'>
-        <p>${shop_name}</p>
-        <p>${product_name}</p>
-        <p>${sale_price} 원</p>
-        </div>
-        `;
-        imageBox.innerHTML = totalImg;
+        setCurProducts(new_product);
+        setIsLoading(false);
       }
     );
   }
@@ -439,44 +396,43 @@ const Popup = React.memo(function Popup(props) {
             제출
           </button>
         </form>
-        <div id="imageBox">
-          {/* {
-          (isLoading ? (
-            <div>
-              <span>로딩중</span>
-            </div>
-          ) : (
+
+        {isLoading ? (
+          <div className="loading__oval">
+            <ThreeDots
+              height="100"
+              width="100"
+              color="#f37423"
+              ariaLabel="loading"
+            />
+          </div>
+        ) : (
+          <div id="imageBox">
             <div className="image__container">
-              <img src={curProducts.img} alt="img" />
-              <h4>{curProducts.shop_name}</h4>
-              <span>{curProducts.product_name}</span>
-              <h4>{curProducts.sale_price}</h4>
+              <img className="currentImg" src={curProducts.img} alt="img" />
             </div>
-          ),
-          console.log('curProducts!', curProducts))
-        } */}
-          {/* {console.log('curProducts!', curProducts)}
-        <div className="image__container">
-          <img src={curProducts.img} alt="img" />
-          <h4>{curProducts.shop_name}</h4>
-          <span>{curProducts.product_name}</span>
-          <h4>{curProducts.sale_price}</h4>
-        </div> */}
-        </div>
-        <button id="addBtn" onClick={handleClick}>
-          추가하기
-        </button>
+            <div className="image__description">
+              <p>{curProducts.shop_name}</p>
+              <p>{curProducts.product_name}</p>
+              <p>{curProducts.sale_price} 원</p>
+            </div>
+            <div className="image__addBtn">
+              <button id="addBtn" onClick={handleClick}>
+                저장
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* 혁주 여기 고쳐놨음 여기 수정하면됨 */}
       <div className="myBasket__container">
         <span className="myBasket__title">내 장바구니</span>
         <button className="mobaBtn" onClick={moveToMain}>
-          모바로 이동!
+          모바로 이동
         </button>
       </div>
       <div className="myBasket">
-        {/* {products.map((item, index) => (
+        {products.reverse().map((item, index) => (
           <div key={index} className="container">
             <img src={item.img} alt="img" />
             <p>
@@ -487,7 +443,7 @@ const Popup = React.memo(function Popup(props) {
               <strong>{item.sale_price}</strong>
             </p>
           </div>
-        ))} */}
+        ))}
       </div>
     </div>
   );
