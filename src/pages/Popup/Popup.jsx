@@ -80,18 +80,18 @@ const Popup = React.memo(function Popup(props) {
       chrome.storage.local.get(['moba'], function (items) {
         console.log(items, 'remove 전 moba');
       });
-      chrome.storage.local.remove(['products', 'moba'], function () {
-        var error = chrome.runtime.lastError;
-        if (error) {
-          console.error(error);
-        }
-      });
-      chrome.storage.local.get(['products'], function (items) {
-        console.log(items, 'remove 후 products');
-      });
-      chrome.storage.local.get(['moba'], function (items) {
-        console.log(items, 'remove 후 moba');
-      });
+      // chrome.storage.local.remove(['products', 'moba'], function () {
+      //   var error = chrome.runtime.lastError;
+      //   if (error) {
+      //     console.error(error);
+      //   }
+      // });
+      // chrome.storage.local.get(['products'], function (items) {
+      //   console.log(items, 'remove 후 products');
+      // });
+      // chrome.storage.local.get(['moba'], function (items) {
+      //   console.log(items, 'remove 후 moba');
+      // });
     }
   );
 
