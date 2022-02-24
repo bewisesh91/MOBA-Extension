@@ -83,6 +83,7 @@ img {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  overflow: auto;
 }
 .myBasket__title {
   font-weight: 600;
@@ -95,7 +96,7 @@ img {
   padding: 7px;
   margin: 7px;
   border-radius: 10px;
-  overflow: scroll;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);

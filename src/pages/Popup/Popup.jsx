@@ -197,14 +197,13 @@ const Popup = React.memo(function Popup(props) {
     console.log(url);
     const split_url = url.split('/');
     const cur_shop = split_url[2];
+
     // 서비스 가능한 사이트만 req 요청 보내기
     if (
       ['www.wconcept.co.kr', 'store.musinsa.com', 'www.brandi.co.kr'].includes(
         cur_shop
       )
     ) {
-      //contents에서 해보자
-
       await axios
         .get(url)
         .then((dataa) => {
@@ -303,6 +302,10 @@ const Popup = React.memo(function Popup(props) {
     await removeBackground(new_product);
   }
 
+  function moveToMain() {
+    chrome.tabs.create({ url: 'localhost:3000/createroom' });
+  }
+
   return (
     <div className="popup">
       <header>
@@ -356,6 +359,10 @@ const Popup = React.memo(function Popup(props) {
           추가하기
         </button>
       </div>
+
+      {/* 혁주 여기 고쳐놨음 여기 수정하면됨 */}
+      <button onClick={moveToMain}>모바로 이동하기</button>
+
       <span className="myBasket__title">내 장바구니</span>
       <div className="myBasket">
         {/* {products.map((item, index) => (
