@@ -342,9 +342,16 @@ const Popup = React.memo(function Popup(props) {
       />
       <div className="currentBox">
         <div className="conditionalInputBox">
-          <input type="url"></input>
-          <input type="text"></input>
-          <input type="text"></input>
+          <input
+            className="imgUrl"
+            type="url"
+            placeholder="이미지 URL을 입력해주세요."
+          ></input>
+          <input
+            className="productPrice"
+            type="text"
+            placeholder="가격을 입력해주세요."
+          ></input>
           <button id="inputBoxBtn">제출</button>
         </div>
         <div id="imageBox">
