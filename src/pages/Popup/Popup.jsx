@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const cheerio = require('cheerio');
 const axios = require('axios');
 let new_product;
+let flag = true;
 
 const Popup = React.memo(function Popup(props) {
   // 공부해서 useState 쓰고싶다...
@@ -23,19 +24,21 @@ const Popup = React.memo(function Popup(props) {
   // });
 
   let authToken = '';
-  chrome.storage.local.get(['userStatus'], function (items) {
-    authToken = items.userStatus;
-    console.log(`authToken??? : ${authToken}`);
-    axios
-      .post('http://127.0.0.1:8000/privatebasket/basket', {
-        token: authToken,
-      })
-      .then((Response) => {
-        console.log('내 장바구니 상품들', Response.data);
-        const myBasket = document.querySelector('.myBasket');
-        let temp = '';
-        for (let i = Response.data.length - 1; 0 <= i; i--) {
-          temp += `
+  if (flag) {
+    flag = false;
+    chrome.storage.local.get(['userStatus'], function (items) {
+      authToken = items.userStatus;
+      console.log(`authToken??? : ${authToken}`);
+      axios
+        .post('http://127.0.0.1:8000/privatebasket/basket', {
+          token: authToken,
+        })
+        .then((Response) => {
+          console.log('내 장바구니 상품들', Response.data);
+          const myBasket = document.querySelector('.myBasket');
+          let temp = '';
+          for (let i = Response.data.length - 1; 0 <= i; i--) {
+            temp += `
           <div class="container">
               <img src=${Response.data[i].img} alt="img" />
               <p>
@@ -48,36 +51,41 @@ const Popup = React.memo(function Popup(props) {
               <button id="deleteBtn${i}" onClick={deleteItem(${authToken}, ${Response.data[i]}, ${Response.data[i].shop_url})}> 상품 삭제 </button>
             </div>
           `;
-        }
-        myBasket.innerHTML += temp;
-        // myBasket.addClass("")
-        // setProducts(Response.data);
-      })
-      .catch((Error) => {
-        console.log(Error);
-      });
-  });
+          }
+          myBasket.innerHTML += temp;
+          // myBasket.addClass("")
+          // setProducts(Response.data);
+        })
+        .catch((Error) => {
+          console.log(Error);
+        });
+    });
 
-  chrome.tabs.query(
-    { currentWindow: true, active: true },
-    async function (tabs) {
-      const shopUrl = tabs[0].url;
-      chrome.storage.local.set({ moba: shopUrl });
+    chrome.tabs.query(
+      { currentWindow: true, active: true },
+      async function (tabs) {
+        const shopUrl = tabs[0].url;
+        chrome.storage.local.set({ moba: shopUrl });
 
-      chrome.tabs.sendMessage(tabs[0].id, { shopUrl: shopUrl }, (response) => {
-        console.log(response, 'response!!!!!!!@'); // Yeah
-      });
+        chrome.tabs.sendMessage(
+          tabs[0].id,
+          { shopUrl: shopUrl },
+          (response) => {
+            console.log(response, 'response!!!!!!!@'); // Yeah
+          }
+        );
 
-      new_product = await parse_product(shopUrl);
-      let imageBox = document.querySelector('#imageBox');
-      let totalImg = '';
+        new_product = await parse_product(shopUrl);
 
-      let imageUrl = new_product.img;
-      let product_name = new_product.product_name;
-      let sale_price = new_product.sale_price;
-      let shop_name = new_product.shop_name;
+        let imageBox = document.querySelector('#imageBox');
+        let totalImg = '';
 
-      totalImg = `
+        let imageUrl = new_product.img;
+        let product_name = new_product.product_name;
+        let sale_price = new_product.sale_price;
+        let shop_name = new_product.shop_name;
+
+        totalImg = `
         <div class='image__container'>
         <img class='currentImg' src=${imageUrl} alt='img1'/>
         </div>
@@ -87,9 +95,10 @@ const Popup = React.memo(function Popup(props) {
         <p>${sale_price} 원</p>
         </div>
         `;
-      imageBox.innerHTML = totalImg;
-    }
-  );
+        imageBox.innerHTML = totalImg;
+      }
+    );
+  }
   // w-concept
   function w_concept(html, url) {
     let shop_name, shop_url, img_url, product_name, price, sale_price;
@@ -227,10 +236,67 @@ const Popup = React.memo(function Popup(props) {
         );
     } else {
       document.querySelector('#imageBox').style.display = 'none';
-      const userInput = document.querySelector('.conditionalInputBox');
+      document.querySelector('#addBtn').style.display = 'none';
     }
     return new_product;
   }
+
+  const [inputs, setInputs] = useState({
+    productName: '',
+    url: '',
+    price: '',
+    shopName: '',
+  });
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setInputs({ ...inputs, [name]: value });
+  };
+
+  const onReset = async (e) => {
+    e.preventDefault();
+    // console.log(inputs.url, inputs.price, inputs.shopName);
+    const inputBox = document.querySelector(
+      '.conditionalInputBox'
+    ).firstElementChild;
+    const productName = inputBox.value;
+    const imgUrl = inputBox.nextElementSibling.value;
+    const productPrice = inputBox.nextElementSibling.nextElementSibling.value;
+    const shopName =
+      inputBox.nextElementSibling.nextElementSibling.nextElementSibling.value;
+
+    console.log(
+      productName,
+      imgUrl,
+      productPrice,
+      shopName,
+      '이미지url, 가격, 샵이름!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    );
+    chrome.tabs.query(
+      { currentWindow: true, active: true },
+      async function (tabs) {
+        const shopUrl = tabs[0].url;
+
+        const new_product = {
+          product_name: productName,
+          price: productPrice,
+          sale_price: productPrice,
+          shop_name: shopName,
+          shop_url: shopUrl,
+          img: imgUrl,
+        };
+        console.log(new_product, '이거 됨????');
+        await removeBackground(new_product);
+        console.log(new_product, '설맠ㅋㅋㅋㅋㅋㅋ????');
+        setInputs({
+          productName: '',
+          url: '',
+          price: '',
+          shopName: '',
+        });
+      }
+    );
+  };
 
   async function removeBackground(new_product) {
     const canvas = document.querySelector('#myCanvas');
@@ -341,19 +407,38 @@ const Popup = React.memo(function Popup(props) {
         pauseOnHover
       />
       <div className="currentBox">
-        <div className="conditionalInputBox">
+        <form className="conditionalInputBox" onSubmit={onReset}>
           <input
-            className="imgUrl"
-            type="url"
-            placeholder="이미지 URL을 입력해주세요."
-          ></input>
-          <input
-            className="productPrice"
+            name="productName"
             type="text"
-            placeholder="가격을 입력해주세요."
+            placeholder="상품명을 입력해주세요"
+            onChange={onChange}
           ></input>
-          <button id="inputBoxBtn">제출</button>
-        </div>
+          <input
+            name="imgUrl"
+            type="url"
+            placeholder="이미지 url을 입력해주세요"
+            onChange={onChange}
+            // value={inputs.url}
+          ></input>
+          <input
+            name="productPrice"
+            type="text"
+            placeholder="상품 가격을 입력해주세요"
+            onChange={onChange}
+            // value={inputs.price}
+          ></input>
+          <input
+            name="shopName"
+            type="text"
+            placeholder="쇼핑몰 이름을 입력해주세요"
+            onChange={onChange}
+            // value={inputs.shopName}
+          />
+          <button id="inputBoxBtn" type="submit">
+            제출
+          </button>
+        </form>
         <div id="imageBox">
           {/* {
           (isLoading ? (
