@@ -19,11 +19,27 @@
 }
 .currentImg {
   width: 130px;
-  height: auto;
+  height: 150px;
 }
 header {
   background-color: black;
   color: #f37423;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+}
+.mobaBtn {
+  background-color: #f37423;
+  color: white;
+  margin: 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 28px;
+  font-weight: 500;
+  margin-right: 30px;
+  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
 }
 header span {
   font-size: 20px;
@@ -68,7 +84,7 @@ img {
 }
 #addBtn {
   position: absolute;
-  top: 154px;
+  top: 155px;
   left: 350px;
   background-color: #f37423;
   color: white;
@@ -77,6 +93,15 @@ img {
   border-radius: 5px;
   cursor: pointer;
   height: 28px;
+  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+}
+.myBasket__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.myBasket__container button {
+  margin-right: 35 px;
 }
 .myBasket {
   display: flex;

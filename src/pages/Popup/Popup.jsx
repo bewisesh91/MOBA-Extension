@@ -361,9 +361,12 @@ const Popup = React.memo(function Popup(props) {
       </div>
 
       {/* 혁주 여기 고쳐놨음 여기 수정하면됨 */}
-      <button onClick={moveToMain}>모바로 이동하기</button>
-
-      <span className="myBasket__title">내 장바구니</span>
+      <div className="myBasket__container">
+        <span className="myBasket__title">내 장바구니</span>
+        <button className="mobaBtn" onClick={moveToMain}>
+          모바로 이동!
+        </button>
+      </div>
       <div className="myBasket">
         {/* {products.map((item, index) => (
           <div key={index} className="container">
