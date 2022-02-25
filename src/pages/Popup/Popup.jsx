@@ -304,16 +304,14 @@ const Popup = React.memo(function Popup(props) {
             console.log(response, 'response');
             toast.success('장바구니 담기 완료!', {
               position: 'top-center',
-              autoClose: 1000,
+              autoClose: 500,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
             });
-            setTimeout(() => {
-              window.location.reload();
-            }, 1800);
+            setProducts([...products, new_product]);
           })
           .catch((Error) => {
             console.log(Error);
@@ -345,16 +343,19 @@ const Popup = React.memo(function Popup(props) {
           console.log(response, 'response');
           toast.success('장바구니 삭제 완료!', {
             position: 'top-center',
-            autoClose: 1000,
+            autoClose: 500,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
           });
-          setTimeout(() => {
-            window.location.reload();
-          }, 1800);
+          setProducts(
+            products?.filter((product) => product.shop_url !== shop_url)
+          );
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 1800);
         });
     });
   }
