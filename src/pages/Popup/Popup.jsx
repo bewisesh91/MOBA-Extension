@@ -335,10 +335,8 @@ const Popup = React.memo(function Popup(props) {
     chrome.storage.local.get(['userStatus'], function (items) {
       const authToken = items.userStatus;
       axios
-        .post('http://127.0.0.1:8000/privatebasket/product', {
-          token: authToken,
-          products: product,
-          shop_url: shop_url,
+        .delete('http://127.0.0.1:8000/privatebasket/product', {
+          data: { token: authToken, products: product, shop_url: shop_url },
         })
         .then((response) => {
           console.log(response);
