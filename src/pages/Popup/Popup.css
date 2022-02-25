@@ -1,7 +1,7 @@
 /* .popup {
   background-color: black;
 } */
-.loading__oval {
+#loading__threedots {
   display: flex;
   justify-content: center;
   align-items: center;

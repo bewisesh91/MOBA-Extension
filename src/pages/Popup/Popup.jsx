@@ -10,16 +10,16 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 let new_product;
 let flag = true;
+let selectFlag = true;
 
 const Popup = React.memo(function Popup(props) {
-  // 공부해서 useState 쓰고싶다...
   const [products, setProducts] = useState([]);
   const [curProducts, setCurProducts] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
   let authToken = '';
   if (flag) {
-    flag = false;
+    flag = false; // 무한 재시작 방지
     chrome.storage.local.get(['userStatus'], function (items) {
       authToken = items.userStatus;
       console.log(`authToken??? : ${authToken}`);
@@ -41,15 +41,6 @@ const Popup = React.memo(function Popup(props) {
       async function (tabs) {
         setIsLoading(true);
         const shopUrl = tabs[0].url;
-        // chrome.storage.local.set({ moba: shopUrl });
-
-        // chrome.tabs.sendMessage(
-        //   tabs[0].id,
-        //   { shopUrl: shopUrl },
-        //   (response) => {
-        //     console.log(response, 'response!!!!!!!@'); // Yeah
-        //   }
-        // );
 
         new_product = await parse_product(shopUrl);
         setCurProducts(new_product);
@@ -193,8 +184,9 @@ const Popup = React.memo(function Popup(props) {
           console.log('get shopping mall html request is failed')
         );
     } else {
+      selectFlag = false;
       document.querySelector('#imageBox').style.display = 'none';
-      document.querySelector('#addBtn').style.display = 'none';
+      document.querySelector('#loading__threedots').style.display = 'none';
     }
     return new_product;
   }
@@ -352,7 +344,9 @@ const Popup = React.memo(function Popup(props) {
             progress: undefined,
           });
           setProducts(
-            products?.filter((product) => product.shop_url !== shop_url)
+            products
+              .reverse()
+              ?.filter((product) => product.shop_url !== shop_url)
           );
           // setTimeout(() => {
           //   window.location.reload();
@@ -418,9 +412,9 @@ const Popup = React.memo(function Popup(props) {
             제출
           </button>
         </form>
-
+        {}
         {isLoading ? (
-          <div className="loading__oval">
+          <div id="loading__threedots">
             <ThreeDots
               height="100"
               width="100"
@@ -468,7 +462,7 @@ const Popup = React.memo(function Popup(props) {
               className="delBtn"
               onClick={() => deleteItem(products, item.shop_url)}
             >
-              <i class="fa-solid fa-xmark fa-2xl"></i>
+              <i className="fa-solid fa-xmark fa-2xl"></i>
             </button>
           </div>
         ))}
