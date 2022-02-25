@@ -9,7 +9,7 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 let new_product;
 let flag = true;
-
+let flag2 = true;
 const Popup = React.memo(function Popup(props) {
   // 공부해서 useState 쓰고싶다...
   const [products, setProducts] = useState([]);
@@ -253,6 +253,7 @@ const Popup = React.memo(function Popup(props) {
         });
       }
     );
+    flag2 = true;
   };
 
   async function removeBackground(new_product) {
@@ -453,22 +454,24 @@ const Popup = React.memo(function Popup(props) {
         </button>
       </div>
       <div className="myBasket">
-        {products.reverse().map((item, index) => (
-          <div key={index} className="container">
-            <img src={item.img} alt="img" />
-            <p>
-              <strong>{item.shop_name}</strong>
-            </p>
-            <p>{item.product_name}</p>
-            <p>
-              <strong>{item.sale_price}</strong>
-            </p>
-            <button onClick={() => deleteItem(products, item.shop_url)}>
-              {' '}
-              삭제하기{' '}
-            </button>
-          </div>
-        ))}
+        {flag2
+          ? (products.reverse(), (flag2 = false))
+          : products.map((item, index) => (
+              <div key={index} className="container">
+                <img src={item.img} alt="img" />
+                <p>
+                  <strong>{item.shop_name}</strong>
+                </p>
+                <p>{item.product_name}</p>
+                <p>
+                  <strong>{item.sale_price}</strong>
+                </p>
+                <button onClick={() => deleteItem(products, item.shop_url)}>
+                  {' '}
+                  삭제하기{' '}
+                </button>
+              </div>
+            ))}
       </div>
     </div>
   );
