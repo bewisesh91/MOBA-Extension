@@ -10,7 +10,6 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 let new_product;
 let flag = true;
-let flag2 = true;
 const Popup = React.memo(function Popup(props) {
   // 공부해서 useState 쓰고싶다...
   const [products, setProducts] = useState([]);
@@ -351,11 +350,13 @@ const Popup = React.memo(function Popup(props) {
             draggable: true,
             progress: undefined,
           });
+
           setProducts(
             products
               .reverse()
               ?.filter((product) => product.shop_url !== shop_url)
           );
+
           // setTimeout(() => {
           //   window.location.reload();
           // }, 1800);
