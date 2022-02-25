@@ -154,10 +154,19 @@ img {
   white-space: nowrap;
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 .container:hover {
   transform: scale(1.1);
+}
+.delBtn {
+  position: absolute;
+  left: 90px;
+  border: none;
   cursor: pointer;
+  background-color: rgba(0, 0, 0, 0);
 }
 .container p {
   margin: 0;

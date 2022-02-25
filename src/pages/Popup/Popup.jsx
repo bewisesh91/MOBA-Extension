@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { ThreeDots } from 'react-loader-spinner';
+import '@fortawesome/fontawesome-free/js/all.js';
 
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -245,15 +246,14 @@ const Popup = React.memo(function Popup(props) {
         console.log(new_product, '이거 됨????');
         await removeBackground(new_product);
         console.log(new_product, '설맠ㅋㅋㅋㅋㅋㅋ????');
-        setInputs({
-          productName: '',
-          url: '',
-          price: '',
-          shopName: '',
-        });
       }
     );
-    flag2 = true;
+    setInputs({
+      productName: '',
+      imgUrl: '',
+      productPrice: '',
+      shopName: '',
+    });
   };
 
   async function removeBackground(new_product) {
@@ -312,7 +312,7 @@ const Popup = React.memo(function Popup(props) {
               draggable: true,
               progress: undefined,
             });
-            setProducts([...products, new_product]);
+            setProducts([...products.reverse(), new_product]);
           })
           .catch((Error) => {
             console.log(Error);
@@ -352,7 +352,9 @@ const Popup = React.memo(function Popup(props) {
             progress: undefined,
           });
           setProducts(
-            products?.filter((product) => product.shop_url !== shop_url)
+            products
+              .reverse()
+              ?.filter((product) => product.shop_url !== shop_url)
           );
           // setTimeout(() => {
           //   window.location.reload();
@@ -392,27 +394,28 @@ const Popup = React.memo(function Popup(props) {
             type="text"
             placeholder="상품명을 입력해주세요"
             onChange={onChange}
+            value={inputs.productName}
           ></input>
           <input
             name="imgUrl"
             type="url"
             placeholder="이미지 url을 입력해주세요"
             onChange={onChange}
-            // value={inputs.url}
+            value={inputs.imgUrl}
           ></input>
           <input
             name="productPrice"
             type="text"
             placeholder="상품 가격을 입력해주세요"
             onChange={onChange}
-            // value={inputs.price}
+            value={inputs.productPrice}
           ></input>
           <input
             name="shopName"
             type="text"
             placeholder="쇼핑몰 이름을 입력해주세요"
             onChange={onChange}
-            // value={inputs.shopName}
+            value={inputs.shopName}
           />
           <button id="inputBoxBtn" type="submit">
             제출
@@ -454,24 +457,24 @@ const Popup = React.memo(function Popup(props) {
         </button>
       </div>
       <div className="myBasket">
-        {flag2
-          ? (products.reverse(), (flag2 = false))
-          : products.map((item, index) => (
-              <div key={index} className="container">
-                <img src={item.img} alt="img" />
-                <p>
-                  <strong>{item.shop_name}</strong>
-                </p>
-                <p>{item.product_name}</p>
-                <p>
-                  <strong>{item.sale_price}</strong>
-                </p>
-                <button onClick={() => deleteItem(products, item.shop_url)}>
-                  {' '}
-                  삭제하기{' '}
-                </button>
-              </div>
-            ))}
+        {products.reverse().map((item, index) => (
+          <div key={index} className="container">
+            <img src={item.img} alt="img" />
+            <p>
+              <strong>{item.shop_name}</strong>
+            </p>
+            <p>{item.product_name}</p>
+            <p>
+              <strong>{item.sale_price} 원</strong>
+            </p>
+            <button
+              className="delBtn"
+              onClick={() => deleteItem(products, item.shop_url)}
+            >
+              <i class="fa-solid fa-xmark fa-2xl"></i>
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
