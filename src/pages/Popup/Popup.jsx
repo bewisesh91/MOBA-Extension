@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { ThreeDots } from 'react-loader-spinner';
+import '@fortawesome/fontawesome-free/js/all.js';
 
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -461,11 +462,13 @@ const Popup = React.memo(function Popup(props) {
             </p>
             <p>{item.product_name}</p>
             <p>
-              <strong>{item.sale_price}</strong>
+              <strong>{item.sale_price} 원</strong>
             </p>
-            <button onClick={() => deleteItem(products, item.shop_url)}>
-              {' '}
-              삭제하기{' '}
+            <button
+              className="delBtn"
+              onClick={() => deleteItem(products, item.shop_url)}
+            >
+              <i class="fa-solid fa-xmark fa-2xl"></i>
             </button>
           </div>
         ))}
