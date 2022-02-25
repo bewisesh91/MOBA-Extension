@@ -175,3 +175,62 @@ img {
 .userInputBox {
   display: none;
 }
+
+.conditional__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  margin: 10px;
+  position: relative;
+  border-radius: 10px;
+  transition: all 235ms ease-in-out;
+  padding: 5px;
+  margin-top: 0;
+}
+.conditional__formBox {
+  display: flex;
+  flex: 3.5 3.5;
+  justify-content: center;
+}
+
+.conditionalInputBox {
+  display: flex;
+  flex-direction: column;
+}
+
+#inputBoxBtn {
+  background-color: #f37423;
+  color: white;
+  width: 60px;
+  height: 40px;
+  margin: 0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  transition: all 235ms ease-in-out;
+}
+.input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  border: 0;
+  border-bottom: 2px solid #f37423;
+  width: 300px;
+}
+.input:focus {
+  outline: none;
+}
+.input__box {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+.input__box label {
+  margin-right: 10px;
+}

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import './Popup.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,12 +10,11 @@ const cheerio = require('cheerio');
 const axios = require('axios');
 let new_product;
 let flag = true;
-const Popup = React.memo(function Popup(props) {
-  // 공부해서 useState 쓰고싶다...
+const Popup = React.memo(function Popup() {
   const [products, setProducts] = useState([]);
   const [curProducts, setCurProducts] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isSupported, setIsSupported] = useState(false);
   let authToken = '';
   if (flag) {
     flag = false;
@@ -40,15 +39,6 @@ const Popup = React.memo(function Popup(props) {
       async function (tabs) {
         setIsLoading(true);
         const shopUrl = tabs[0].url;
-        // chrome.storage.local.set({ moba: shopUrl });
-
-        // chrome.tabs.sendMessage(
-        //   tabs[0].id,
-        //   { shopUrl: shopUrl },
-        //   (response) => {
-        //     console.log(response, 'response!!!!!!!@'); // Yeah
-        //   }
-        // );
 
         new_product = await parse_product(shopUrl);
         setCurProducts(new_product);
@@ -168,7 +158,7 @@ const Popup = React.memo(function Popup(props) {
         cur_shop
       )
     ) {
-      document.querySelector('.conditionalInputBox').style.display = 'none';
+      // document.querySelector('.conditional__container').style.display = 'none';
       await axios
         .get(url)
         .then((dataa) => {
@@ -192,12 +182,16 @@ const Popup = React.memo(function Popup(props) {
           console.log('get shopping mall html request is failed')
         );
     } else {
-      document.querySelector('#imageBox').style.display = 'none';
-      document.querySelector('#addBtn').style.display = 'none';
+      // 서비스 가능한 사이트가 아닌 경우
+      setIsSupported(true);
+      const currBox = document.querySelector('.currentBox');
+      currBox.style.display = 'none';
+      const imageBox = document.querySelector('#imageBox');
+      imageBox.style.display = 'none';
     }
     return new_product;
   }
-
+  // inputs의 useState 여기서 진행
   const [inputs, setInputs] = useState({
     productName: '',
     url: '',
@@ -212,23 +206,12 @@ const Popup = React.memo(function Popup(props) {
 
   const onReset = async (e) => {
     e.preventDefault();
-    // console.log(inputs.url, inputs.price, inputs.shopName);
-    const inputBox = document.querySelector(
-      '.conditionalInputBox'
-    ).firstElementChild;
-    const productName = inputBox.value;
-    const imgUrl = inputBox.nextElementSibling.value;
-    const productPrice = inputBox.nextElementSibling.nextElementSibling.value;
-    const shopName =
-      inputBox.nextElementSibling.nextElementSibling.nextElementSibling.value;
 
-    console.log(
-      productName,
-      imgUrl,
-      productPrice,
-      shopName,
-      '이미지url, 가격, 샵이름!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-    );
+    const productName = inputs.productName;
+    const imgUrl = inputs.url;
+    const productPrice = inputs.price;
+    const shopName = inputs.shopName;
+
     chrome.tabs.query(
       { currentWindow: true, active: true },
       async function (tabs) {
@@ -242,15 +225,13 @@ const Popup = React.memo(function Popup(props) {
           shop_url: shopUrl,
           img: imgUrl,
         };
-        console.log(new_product, '이거 됨????');
         await removeBackground(new_product);
-        console.log(new_product, '설맠ㅋㅋㅋㅋㅋㅋ????');
       }
     );
     setInputs({
       productName: '',
-      imgUrl: '',
-      productPrice: '',
+      url: '',
+      price: '',
       shopName: '',
     });
   };
@@ -292,9 +273,7 @@ const Popup = React.memo(function Popup(props) {
       // get secure S3 url from our server
       const target =
         'http://127.0.0.1:8000/s3Url/' +
-        new_product.img
-          .split('https://')[1]
-          .replaceAll('/', '-');
+        new_product.img.split('https://')[1].replaceAll('/', '-');
       const S3url = await fetch(target).then((res) => res.json());
       console.log(S3url);
 
@@ -382,7 +361,7 @@ const Popup = React.memo(function Popup(props) {
             draggable: true,
             progress: undefined,
           });
-
+          //reloading 하지 않고(setTimeout 쓰지 않고) useState활용하여 다시 그려줌
           setProducts(
             products
               .reverse()
@@ -406,9 +385,6 @@ const Popup = React.memo(function Popup(props) {
         <h1>RemoveBackground Page</h1>
         <canvas id="myCanvas"></canvas>
       </div>
-      <div className="currentTitleBox">
-        <span className="currentTitle">지금 보고있는 상품</span>
-      </div>
       <ToastContainer
         position="top-center"
         autoClose={1000}
@@ -420,41 +396,80 @@ const Popup = React.memo(function Popup(props) {
         draggable
         pauseOnHover
       />
-      <div className="currentBox">
-        <form className="conditionalInputBox" onSubmit={onReset}>
-          <input
-            name="productName"
-            type="text"
-            placeholder="상품명을 입력해주세요"
-            onChange={onChange}
-            value={inputs.productName}
-          ></input>
-          <input
-            name="imgUrl"
-            type="url"
-            placeholder="이미지 url을 입력해주세요"
-            onChange={onChange}
-            value={inputs.imgUrl}
-          ></input>
-          <input
-            name="productPrice"
-            type="text"
-            placeholder="상품 가격을 입력해주세요"
-            onChange={onChange}
-            value={inputs.productPrice}
-          ></input>
-          <input
-            name="shopName"
-            type="text"
-            placeholder="쇼핑몰 이름을 입력해주세요"
-            onChange={onChange}
-            value={inputs.shopName}
-          />
-          <button id="inputBoxBtn" type="submit">
-            제출
-          </button>
-        </form>
+      {isSupported ? (
+        <>
+          <div className="currentTitleBox">
+            <span className="currentTitle">상품정보 입력</span>
+          </div>
+          <div className="conditional__container">
+            <div className="conditional__formBox">
+              <form
+                id="addMyCart"
+                className="conditionalInputBox"
+                onSubmit={onReset}
+              >
+                <div className="input__box">
+                  <label htmlFor="productName">상품명</label>
+                  <input
+                    autoFocus
+                    className="input"
+                    name="productName"
+                    type="text"
+                    placeholder="상품명을 입력해주세요"
+                    onChange={onChange}
+                    value={inputs.productName}
+                  ></input>
+                </div>
+                <div className="input__box">
+                  <label htmlFor="imgUrl">이미지 주소</label>
+                  <input
+                    className="input"
+                    name="url"
+                    type="url"
+                    placeholder="이미지 오른쪽클릭후 이미지 주소 복사"
+                    onChange={onChange}
+                    value={inputs.url}
+                  ></input>
+                </div>
+                <div className="input__box">
+                  <label htmlFor="productPrice">상품 가격</label>
+                  <input
+                    className="input"
+                    name="price"
+                    type="text"
+                    placeholder="상품 가격을 입력해주세요"
+                    onChange={onChange}
+                    value={inputs.price}
+                  ></input>
+                </div>
+                <div className="input__box">
+                  <label htmlFor="shopName">쇼핑몰 이름</label>
+                  <input
+                    className="input"
+                    name="shopName"
+                    type="text"
+                    placeholder="쇼핑몰 이름을 입력해주세요"
+                    onChange={onChange}
+                    value={inputs.shopName}
+                  />
+                </div>
+              </form>
+            </div>
+            <div className="image__addBtn">
+              <button form="addMyCart" id="inputBoxBtn" type="submit">
+                저장
+              </button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
 
+      <div className="currentBox">
+        <div className="currentTitleBox">
+          <span className="currentTitle">지금 보고있는 상품</span>
+        </div>
         {isLoading ? (
           <div className="loading__oval">
             <ThreeDots
@@ -504,7 +519,7 @@ const Popup = React.memo(function Popup(props) {
               className="delBtn"
               onClick={() => deleteItem(products, item.shop_url)}
             >
-              <i class="fa-solid fa-xmark fa-2xl"></i>
+              <i className="fa-solid fa-xmark fa-2xl"></i>
             </button>
           </div>
         ))}
