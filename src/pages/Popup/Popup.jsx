@@ -331,11 +331,33 @@ const Popup = React.memo(function Popup(props) {
     chrome.tabs.create({ url: 'localhost:3000/createroom' });
   }
 
-  function deleteItem(authToken, product, shop_url) {
-    axios.delete('http://127.0.0.1:8000/privatebasket/', {
-      token: authToken,
-      products: product,
-      shop_url: shop_url,
+  async function deleteItem(product, shop_url) {
+    chrome.storage.local.get(['userStatus'], function (items) {
+      const authToken = items.userStatus;
+      axios
+        .post('http://127.0.0.1:8000/privatebasket/product', {
+          token: authToken,
+          products: product,
+          shop_url: shop_url,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .then((response) => {
+          console.log(response, 'response');
+          toast.success('장바구니 삭제 완료!', {
+            position: 'top-center',
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1800);
+        });
     });
   }
 
@@ -442,6 +464,10 @@ const Popup = React.memo(function Popup(props) {
             <p>
               <strong>{item.sale_price}</strong>
             </p>
+            <button onClick={() => deleteItem(products, item.shop_url)}>
+              {' '}
+              삭제하기{' '}
+            </button>
           </div>
         ))}
       </div>
