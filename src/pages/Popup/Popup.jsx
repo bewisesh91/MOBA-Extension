@@ -185,9 +185,13 @@ const Popup = React.memo(function Popup() {
       // 서비스 가능한 사이트가 아닌 경우
       setIsSupported(true);
       const currBox = document.querySelector('.currentBox');
-      currBox.style.display = 'none';
+      if (currBox) {
+        currBox.style.display = 'none';
+      }
       const imageBox = document.querySelector('#imageBox');
-      imageBox.style.display = 'none';
+      if (imageBox) {
+        imageBox.style.display = 'none';
+      }
     }
     return new_product;
   }
@@ -482,12 +486,12 @@ const Popup = React.memo(function Popup() {
         ) : (
           <div id="imageBox">
             <div className="image__container">
-              <img className="currentImg" src={curProducts.img} alt="img" />
+              <img className="currentImg" src={curProducts?.img} alt="img" />
             </div>
             <div className="image__description">
-              <p>{curProducts.shop_name}</p>
-              <p>{curProducts.product_name}</p>
-              <p>{curProducts.sale_price} 원</p>
+              <p>{curProducts?.shop_name}</p>
+              <p>{curProducts?.product_name}</p>
+              <p>{curProducts?.sale_price} 원</p>
             </div>
             <div className="image__addBtn">
               <button id="addBtn" onClick={handleClick}>
