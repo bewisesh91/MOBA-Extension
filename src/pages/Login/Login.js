@@ -11,7 +11,7 @@ document.querySelector('form').addEventListener('submit', (e) => {
 
   const id = document.querySelector('#id').value;
   const password = document.querySelector('#password').value;
-  console.log(id, password);
+  
   // eslint-disable-next-line no-undef
   $.ajax({
     url: 'http://127.0.0.1:8000/api/users/login',
@@ -26,7 +26,6 @@ document.querySelector('form').addEventListener('submit', (e) => {
         chrome.storage.local.set({
           userStatus: result.token,
         });
-        console.log(result.token);
         window.location.href = 'popup.html';
       } else {
         alert('실패');

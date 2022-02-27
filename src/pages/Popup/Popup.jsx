@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Popup.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,25 +9,23 @@ import '@fortawesome/fontawesome-free/js/all.js';
 const cheerio = require('cheerio');
 const axios = require('axios');
 let new_product;
-let flag = true;
 const Popup = React.memo(function Popup() {
   const [products, setProducts] = useState([]);
   const [curProducts, setCurProducts] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  let authToken = '';
-  if (flag) {
-    flag = false;
+  // if (flag)
+  // flag = false;
+  useEffect(() => {
     chrome.storage.local.get(['userStatus'], function (items) {
-      authToken = items.userStatus;
-      console.log(`authToken??? : ${authToken}`);
+      const authToken = items.userStatus;
+
       axios
         .post('http://127.0.0.1:8000/privatebasket/basket', {
           token: authToken,
         })
         .then((Response) => {
-          console.log('내 장바구니 상품들', Response.data);
-          setProducts(Response.data);
+          setProducts(Response.data.reverse());
         })
         .catch((Error) => {
           console.log(Error);
@@ -45,7 +43,57 @@ const Popup = React.memo(function Popup() {
         setIsLoading(false);
       }
     );
-  }
+    async function parse_product(url) {
+      let new_product;
+      const split_url = url.split('/');
+      const cur_shop = split_url[2];
+
+      // 서비스 가능한 사이트만 req 요청 보내기
+      if (
+        [
+          'www.wconcept.co.kr',
+          'store.musinsa.com',
+          'www.brandi.co.kr',
+        ].includes(cur_shop)
+      ) {
+        // document.querySelector('.conditional__container').style.display = 'none';
+        await axios
+          .get(url)
+          .then((dataa) => {
+            const html = dataa.data;
+            switch (cur_shop) {
+              case 'www.wconcept.co.kr':
+                new_product = w_concept(html, url);
+                break;
+              case 'store.musinsa.com':
+                new_product = musinsa(html, url);
+                break;
+              case 'www.brandi.co.kr':
+                new_product = brandi(html, url);
+                break;
+              default:
+                break;
+            }
+          })
+          .catch(
+            // 리퀘스트 실패 - then 보다 catch 가 먼저 실행됨..
+            console.log('get shopping mall html request is failed')
+          );
+      } else {
+        // 서비스 가능한 사이트가 아닌 경우
+        setIsSupported(true);
+        const currBox = document.querySelector('.currentBox');
+        if (currBox) {
+          currBox.style.display = 'none';
+        }
+        const imageBox = document.querySelector('#imageBox');
+        if (imageBox) {
+          imageBox.style.display = 'none';
+        }
+      }
+      return new_product;
+    }
+  }, []);
   // w-concept
   function w_concept(html, url) {
     let shop_name, shop_url, img_url, product_name, price, sale_price;
@@ -79,7 +127,7 @@ const Popup = React.memo(function Popup() {
       '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > span > em'
     ).text();
     price = $('#goods_price').text().trim();
-    console.log(price);
+
     // price parsing - e.g. 110,000원 -> 110000
     price = Number(
       price
@@ -91,7 +139,7 @@ const Popup = React.memo(function Popup() {
     sale_price = $(
       '#sPrice > ul > li > span.txt_price_member.m_list_price'
     ).text();
-    console.log(sale_price);
+
     sale_price = Number(
       sale_price
         .slice(0, -1)
@@ -141,60 +189,10 @@ const Popup = React.memo(function Popup() {
       shop_url: shop_url,
       img: img_url,
     };
-    console.log(new_product);
 
     return new_product;
   }
 
-  async function parse_product(url) {
-    let new_product;
-    console.log(url);
-    const split_url = url.split('/');
-    const cur_shop = split_url[2];
-
-    // 서비스 가능한 사이트만 req 요청 보내기
-    if (
-      ['www.wconcept.co.kr', 'store.musinsa.com', 'www.brandi.co.kr'].includes(
-        cur_shop
-      )
-    ) {
-      // document.querySelector('.conditional__container').style.display = 'none';
-      await axios
-        .get(url)
-        .then((dataa) => {
-          const html = dataa.data;
-          switch (cur_shop) {
-            case 'www.wconcept.co.kr':
-              new_product = w_concept(html, url);
-              break;
-            case 'store.musinsa.com':
-              new_product = musinsa(html, url);
-              break;
-            case 'www.brandi.co.kr':
-              new_product = brandi(html, url);
-              break;
-            default:
-              break;
-          }
-        })
-        .catch(
-          // 리퀘스트 실패 - then 보다 catch 가 먼저 실행됨..
-          console.log('get shopping mall html request is failed')
-        );
-    } else {
-      // 서비스 가능한 사이트가 아닌 경우
-      setIsSupported(true);
-      const currBox = document.querySelector('.currentBox');
-      if (currBox) {
-        currBox.style.display = 'none';
-      }
-      const imageBox = document.querySelector('#imageBox');
-      if (imageBox) {
-        imageBox.style.display = 'none';
-      }
-    }
-    return new_product;
-  }
   // inputs의 useState 여기서 진행
   const [inputs, setInputs] = useState({
     productName: '',
@@ -246,102 +244,110 @@ const Popup = React.memo(function Popup() {
     let removedBgImg;
     originalImg.src = new_product.img; //불러온 이미지로 변경
     // canvas에 이미지 복제
+
     let ctx = canvas.getContext('2d');
-    console.log(ctx, 'ctx');
+
     originalImg.onload = async function () {
-      console.log(originalImg, 'original img!');
       canvas.width = originalImg.naturalWidth;
       canvas.height = originalImg.naturalHeight;
       ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
       // 복제된 이미지에 대한 pixel정보 가져옴
-      let _id = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      console.log(_id, 'id');
-      // 픽셀 순회
-      for (var i = 0; i < _id.data.length; i += 4) {
-        if (
-          _id.data[i] === 255 &&
-          _id.data[i + 1] === 255 &&
-          _id.data[i + 2] === 255
-        ) {
-          _id.data[i] = 0;
-          _id.data[i + 1] = 0;
-          _id.data[i + 2] = 0;
-          _id.data[i + 3] = 0;
+      let _id = new Image();
+      _id.setAttribute('crossOrigin', '');
+      try {
+        _id = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        // 픽셀 순회
+        for (var i = 0; i < _id.data.length; i += 4) {
+          if (
+            _id.data[i] === 255 &&
+            _id.data[i + 1] === 255 &&
+            _id.data[i + 2] === 255
+          ) {
+            _id.data[i] = 0;
+            _id.data[i + 1] = 0;
+            _id.data[i + 2] = 0;
+            _id.data[i + 3] = 0;
+          }
         }
-      }
-      ctx.putImageData(_id, 0, 0);
-      removedBgImg = canvas.toDataURL('image/png');
-      console.log(removedBgImg, 'return 전 removedBg');
+        ctx.putImageData(_id, 0, 0);
+        removedBgImg = canvas.toDataURL('image/png');
 
-      /** ---------------- S3  start ---------------- */
-      // get secure S3 url from our server
-      const target =
-        'http://127.0.0.1:8000/s3Url/' +
-        new_product.img.split('https://')[1].replaceAll('/', '-');
-      const S3url = await fetch(target).then((res) => res.json());
-      console.log(S3url);
+        /** ---------------- S3  start ---------------- */
+        // get secure S3 url from our server
+        const target =
+          'http://127.0.0.1:8000/s3Url/' +
+          new_product.img.split('https://')[1].replaceAll('/', '-');
+        const S3url = await fetch(target).then((res) => res.json());
 
-      // make ascii to binary file
-      let bstr = atob(removedBgImg.split(',')[1]);
-      let n = bstr.length;
-      let u8arr = new Uint8Array(n);
+        // make ascii to binary file
+        let bstr = atob(removedBgImg.split(',')[1]);
+        let n = bstr.length;
+        let u8arr = new Uint8Array(n);
 
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
 
-      let file = new File([u8arr], 'imgFile.png', { type: 'mime' });
+        let file = new File([u8arr], 'imgFile.png', { type: 'mime' });
 
-      await fetch(S3url.url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        body: file,
-      });
+        await fetch(S3url.url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          body: file,
+        });
 
-      // put S3 removedBgImg url in new_product info
-      const imageUrl = S3url.url.split('?')[0];
-      console.log(imageUrl);
-      new_product.removedBgImg = imageUrl;
-      console.log(new_product, 'new_product@#!#!');
-      /** ---------------- S3  end ---------------- */
+        // put S3 removedBgImg url in new_product info
+        const imageUrl = S3url.url.split('?')[0];
 
-      chrome.storage.local.get(['userStatus'], function (items) {
-        const authToken = items.userStatus;
+        new_product.removedBgImg = imageUrl;
 
-        axios
-          .post('http://127.0.0.1:8000/privatebasket', {
-            token: authToken,
-            products: [new_product],
-          })
-          .then((response) => {
-            console.log(response, 'response');
-            toast.success('장바구니 담기 완료!', {
-              position: 'top-center',
-              autoClose: 500,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
+        /** ---------------- S3  end ---------------- */
+
+        chrome.storage.local.get(['userStatus'], function (items) {
+          const authToken = items.userStatus;
+
+          axios
+            .post('http://127.0.0.1:8000/privatebasket', {
+              token: authToken,
+              products: [new_product],
+            })
+            .then((response) => {
+              toast.success('장바구니 담기 완료!', {
+                position: 'top-center',
+                autoClose: 500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+              setProducts([new_product, ...products]);
+            })
+            .catch((Error) => {
+              console.log(Error);
             });
-            setProducts([...products.reverse(), new_product]);
-          })
-          .catch((Error) => {
-            console.log(Error);
-          });
-      });
+        });
+      } catch {
+        alert('이미지 저장이 불가능한 쇼핑몰입니다!');
+      }
     };
   }
 
   async function handleClick() {
-    console.log('np', new_product);
     await removeBackground(new_product);
   }
 
   function moveToMain() {
     chrome.tabs.create({ url: 'localhost:3000/createroom' });
+  }
+  function logOut() {
+    chrome.storage.local.set({
+      userStatus: '',
+    });
+    window.location.href = 'login.html';
   }
 
   async function deleteItem(product, shop_url) {
@@ -355,7 +361,6 @@ const Popup = React.memo(function Popup() {
           console.log(response);
         })
         .then((response) => {
-          console.log(response, 'response');
           toast.success('장바구니 삭제 완료!', {
             position: 'top-center',
             autoClose: 500,
@@ -367,14 +372,8 @@ const Popup = React.memo(function Popup() {
           });
           //reloading 하지 않고(setTimeout 쓰지 않고) useState활용하여 다시 그려줌
           setProducts(
-            products
-              .reverse()
-              ?.filter((product) => product.shop_url !== shop_url)
+            products?.filter((product) => product.shop_url !== shop_url)
           );
-
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 1800);
         });
     });
   }
@@ -507,9 +506,12 @@ const Popup = React.memo(function Popup() {
         <button className="mobaBtn" onClick={moveToMain}>
           모바로 이동
         </button>
+        <button className="mobaBtn" onClick={logOut}>
+          로그 아웃
+        </button>
       </div>
       <div className="myBasket">
-        {products.reverse().map((item, index) => (
+        {products?.map((item, index) => (
           <div key={index} className="container">
             <img src={item.img} alt="img" />
             <p>
