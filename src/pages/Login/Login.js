@@ -11,7 +11,7 @@ document.querySelector('form').addEventListener('submit', (e) => {
 
   const id = document.querySelector('#id').value;
   const password = document.querySelector('#password').value;
-  
+
   // eslint-disable-next-line no-undef
   $.ajax({
     url: 'http://127.0.0.1:8000/api/users/login',
@@ -32,4 +32,9 @@ document.querySelector('form').addEventListener('submit', (e) => {
       }
     },
   });
+});
+
+document.getElementById('register').addEventListener('submit', (e) => {
+  e.preventDefault();
+  chrome.tabs.create({ url: 'localhost:3000' });
 });
