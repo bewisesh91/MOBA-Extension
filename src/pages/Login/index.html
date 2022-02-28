@@ -7,12 +7,34 @@
     <title>Document</title>
   </head>
 
-  <body>
+  <body style="background-color: black; display: flex">
     <form action="Login.js" method="post">
       <input id="id" type="text" placeholder="아이디 입력하세요" />
       <input id="password" type="password" placeholder="비밀번호 입력하세요" />
-      <button type="submit">로그인</button>
+      <button
+        type="submit"
+        style="
+          color: black;
+          background-color: rgba(244, 116, 35, 1);
+          font-weight: bold;
+        "
+      >
+        로그인
+      </button>
     </form>
+    <form id="register" action="Login.js" method="post">
+      <button
+        type="submit"
+        style="
+          color: black;
+          background-color: rgba(244, 116, 35, 1);
+          font-weight: bold;
+        "
+      >
+        회원가입
+      </button>
+    </form>
+
     <script type="text/javascript" src="jquery.js"></script>
     <script src="Login.js"></script>
   </body>
