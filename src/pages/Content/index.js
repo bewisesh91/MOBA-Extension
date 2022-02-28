@@ -1,27 +1,26 @@
 import cheerio from 'cheerio';
 
-
 chrome.storage.local.get(['moba'], function (items) {
   let curShop = items.moba;
-  let new_product;
+  let new_product, split_url, cur_shop;
 
   const html = document.documentElement.innerHTML;
-  const split_url = curShop.split('/');
-  const cur_shop = split_url[2];
+
+  if (curShop) {
+    split_url = curShop.split('/');
+    cur_shop = split_url[2];
+  }
   if (
     ['www.wconcept.co.kr', 'store.musinsa.com', 'www.brandi.co.kr'].includes(
       cur_shop
     )
   ) {
-
     switch (cur_shop) {
       case 'www.wconcept.co.kr':
         new_product = w_concept(html, cur_shop);
         break;
       case 'store.musinsa.com':
-
         new_product = musinsa(html, curShop); //curShop까지 동일
-
 
         chrome.storage.local.set({ products: new_product });
         break;
@@ -59,7 +58,6 @@ function w_concept(html, url) {
 
 // 무신사
 function musinsa(html, url) {
-
   let shop_name, shop_url, img_url, product_name, price, sale_price;
   const $ = cheerio.load(html); // html load
 
@@ -131,7 +129,5 @@ function brandi(html, url) {
     img: img_url,
   };
 
-
   return new_product;
 }
-

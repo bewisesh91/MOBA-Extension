@@ -46,7 +46,7 @@ const Popup = React.memo(function Popup() {
     );
     async function parse_product(url) {
       let new_product;
-      const split_url = url.split('/');
+      const split_url = url?.split('/');
       const cur_shop = split_url[2];
 
       // 서비스 가능한 사이트만 req 요청 보내기
@@ -133,7 +133,7 @@ const Popup = React.memo(function Popup() {
     price = Number(
       price
         .slice(0, -1)
-        .split(',')
+        ?.split(',')
         .reduce((a, b) => a + b)
     );
 
@@ -144,7 +144,7 @@ const Popup = React.memo(function Popup() {
     sale_price = Number(
       sale_price
         .slice(0, -1)
-        .split(',')
+        ?.split(',')
         .reduce((a, b) => a + b)
     );
     shop_name = 'Musinsa';
@@ -176,11 +176,11 @@ const Popup = React.memo(function Popup() {
     price = $(
       '#container > div > div.wrap-products-info > div.wrap-detail_info > div.detail_basic-info > div.detail-price-wrapper.hideFinalPriceSection > div > div > span > span'
     ).text();
-    price = Number(price.split(',').reduce((a, b) => a + b));
+    price = Number(price?.split(',').reduce((a, b) => a + b));
     sale_price = $(
       '#container > div > div.wrap-products-info > div.wrap-detail_info > div.detail_basic-info > div.detail-price-wrapper.hideFinalPriceSection > div > div > em > span'
     ).text();
-    sale_price = Number(sale_price.split(',').reduce((a, b) => a + b));
+    sale_price = Number(sale_price?.split(',').reduce((a, b) => a + b));
 
     const new_product = {
       product_name: product_name,
@@ -256,11 +256,11 @@ const Popup = React.memo(function Popup() {
           // get secure S3 url from our server
           const target =
             'http://127.0.0.1:8000/s3Url/' +
-            new_product.img.split('https://')[1].replaceAll('/', '-');
+            new_product.img?.split('https://')[1].replaceAll('/', '-');
           const S3url = await fetch(target).then((res) => res.json());
 
           // make ascii to binary file
-          let bstr = atob(removedBgImg.split(',')[1]);
+          let bstr = atob(removedBgImg?.split(',')[1]);
           let n = bstr.length;
           let u8arr = new Uint8Array(n);
 
@@ -279,7 +279,7 @@ const Popup = React.memo(function Popup() {
           });
 
           // put S3 removedBgImg url in new_product info
-          const imageUrl = S3url.url.split('?')[0];
+          const imageUrl = S3url.url?.split('?')[0];
 
           new_product.removedBgImg = imageUrl;
 
@@ -384,10 +384,6 @@ const Popup = React.memo(function Popup() {
       // Get the remaining.
       let remainder = index - lowerIndex;
       // Add the remaining to the lowerindex value.
-      // console.log(
-      //   array[lowerIndex] +
-      //     remainder * (array[lowerIndex + 1] - array[lowerIndex])
-      // );
       return (
         array[lowerIndex] +
         remainder * (array[lowerIndex + 1] - array[lowerIndex])
@@ -407,7 +403,6 @@ const Popup = React.memo(function Popup() {
     try {
       const _id = await ctx.getImageData(0, 0, canvas.width, canvas.height);
       const pixels = _id.data;
-      console.log(_id.data[0], 'datadatadatadata');
       const targetR =
         lodash.sum(
           filterOutliers([
