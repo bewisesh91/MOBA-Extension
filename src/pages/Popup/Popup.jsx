@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { ThreeDots } from 'react-loader-spinner';
 import '@fortawesome/fontawesome-free/js/all.js';
+import lodash from 'lodash';
 
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -241,97 +242,76 @@ const Popup = React.memo(function Popup() {
   async function removeBackground(new_product) {
     const canvas = document.querySelector('#myCanvas');
     const originalImg = document.querySelector('.img__original');
-    let removedBgImg;
+    // let removedBgImg;
     originalImg.src = new_product.img; //불러온 이미지로 변경
+
     // canvas에 이미지 복제
+    // let ctx = canvas.getContext('2d');
 
-    let ctx = canvas.getContext('2d');
+    originalImg.onload = async () => {
+      if (await Nooki(canvas, originalImg)) {
+        try {
+          const removedBgImg = canvas.toDataURL('image/png');
+          /** ---------------- S3  start ---------------- */
+          // get secure S3 url from our server
+          const target =
+            'http://127.0.0.1:8000/s3Url/' +
+            new_product.img.split('https://')[1].replaceAll('/', '-');
+          const S3url = await fetch(target).then((res) => res.json());
 
-    originalImg.onload = async function () {
-      canvas.width = originalImg.naturalWidth;
-      canvas.height = originalImg.naturalHeight;
-      ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
-      // 복제된 이미지에 대한 pixel정보 가져옴
-      let _id = new Image();
-      _id.setAttribute('crossOrigin', '');
-      try {
-        _id = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          // make ascii to binary file
+          let bstr = atob(removedBgImg.split(',')[1]);
+          let n = bstr.length;
+          let u8arr = new Uint8Array(n);
 
-        // 픽셀 순회
-        for (var i = 0; i < _id.data.length; i += 4) {
-          if (
-            _id.data[i] === 255 &&
-            _id.data[i + 1] === 255 &&
-            _id.data[i + 2] === 255
-          ) {
-            _id.data[i] = 0;
-            _id.data[i + 1] = 0;
-            _id.data[i + 2] = 0;
-            _id.data[i + 3] = 0;
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
           }
-        }
-        ctx.putImageData(_id, 0, 0);
-        removedBgImg = canvas.toDataURL('image/png');
 
-        /** ---------------- S3  start ---------------- */
-        // get secure S3 url from our server
-        const target =
-          'http://127.0.0.1:8000/s3Url/' +
-          new_product.img.split('https://')[1].replaceAll('/', '-');
-        const S3url = await fetch(target).then((res) => res.json());
+          let file = new File([u8arr], 'imgFile.png', { type: 'mime' });
 
-        // make ascii to binary file
-        let bstr = atob(removedBgImg.split(',')[1]);
-        let n = bstr.length;
-        let u8arr = new Uint8Array(n);
+          await fetch(S3url.url, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            body: file,
+          });
 
-        while (n--) {
-          u8arr[n] = bstr.charCodeAt(n);
-        }
+          // put S3 removedBgImg url in new_product info
+          const imageUrl = S3url.url.split('?')[0];
 
-        let file = new File([u8arr], 'imgFile.png', { type: 'mime' });
+          new_product.removedBgImg = imageUrl;
 
-        await fetch(S3url.url, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          body: file,
-        });
+          /** ---------------- S3  end ---------------- */
 
-        // put S3 removedBgImg url in new_product info
-        const imageUrl = S3url.url.split('?')[0];
+          chrome.storage.local.get(['userStatus'], function (items) {
+            const authToken = items.userStatus;
 
-        new_product.removedBgImg = imageUrl;
-
-        /** ---------------- S3  end ---------------- */
-
-        chrome.storage.local.get(['userStatus'], function (items) {
-          const authToken = items.userStatus;
-
-          axios
-            .post('http://127.0.0.1:8000/privatebasket', {
-              token: authToken,
-              products: [new_product],
-            })
-            .then((response) => {
-              toast.success('장바구니 담기 완료!', {
-                position: 'top-center',
-                autoClose: 500,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
+            axios
+              .post('http://127.0.0.1:8000/privatebasket', {
+                token: authToken,
+                products: [new_product],
+              })
+              .then((response) => {
+                toast.success('장바구니 담기 완료!', {
+                  position: 'top-center',
+                  autoClose: 500,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                });
+                setProducts([new_product, ...products]);
+              })
+              .catch((Error) => {
+                alert('중복된 상품입니다!');
               });
-              setProducts([new_product, ...products]);
-            })
-            .catch((Error) => {
-              console.log(Error);
-            });
-        });
-      } catch {
-        alert('이미지 저장이 불가능한 쇼핑몰입니다!');
+          });
+        } catch {
+          alert('이미지 저장이 불가능한 쇼핑몰입니다!');
+        }
       }
     };
   }
@@ -377,7 +357,113 @@ const Popup = React.memo(function Popup() {
         });
     });
   }
+  function filterOutliers(someArray) {
+    let values = someArray.slice().sort((a, b) => a - b); // copy array fast and sort
 
+    let q1 = getQuantile(values, 25);
+    let q3 = getQuantile(values, 75);
+
+    let iqr, maxValue, minValue;
+    iqr = q3 - q1;
+    maxValue = q3 + iqr * 1.5;
+    minValue = q1 - iqr * 1.5;
+
+    return values.filter((x) => x >= minValue && x <= maxValue);
+  }
+
+  function getQuantile(array, quantile) {
+    // Get the index the quantile is at.
+    let index = (quantile / 100.0) * (array.length - 1);
+
+    // Check if it has decimal places.
+    if (index % 1 === 0) {
+      return array[index];
+    } else {
+      // Get the lower index.
+      let lowerIndex = Math.floor(index);
+      // Get the remaining.
+      let remainder = index - lowerIndex;
+      // Add the remaining to the lowerindex value.
+      // console.log(
+      //   array[lowerIndex] +
+      //     remainder * (array[lowerIndex + 1] - array[lowerIndex])
+      // );
+      return (
+        array[lowerIndex] +
+        remainder * (array[lowerIndex + 1] - array[lowerIndex])
+      );
+    }
+  }
+
+  async function Nooki(canvas, originalImg) {
+    let ctx = canvas.getContext('2d');
+    canvas.width = originalImg.naturalWidth;
+    canvas.height = originalImg.naturalHeight;
+    await ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
+    // 복제된 이미지에 대한 pixel정보 가져옴
+    // let _id = new Image();
+    // _id.setAttribute('crossOrigin', '');
+
+    try {
+      const _id = await ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = _id.data;
+      console.log(_id.data[0], 'datadatadatadata');
+      const targetR =
+        lodash.sum(
+          filterOutliers([
+            pixels[100],
+            pixels[104],
+            pixels[108],
+            pixels[112],
+            pixels[116],
+          ])
+        ) / 5;
+      const targetG =
+        lodash.sum(
+          filterOutliers([
+            pixels[101],
+            pixels[105],
+            pixels[109],
+            pixels[113],
+            pixels[117],
+          ])
+        ) / 5;
+      const targetB =
+        lodash.sum(
+          filterOutliers([
+            pixels[102],
+            pixels[106],
+            pixels[110],
+            pixels[114],
+            pixels[118],
+          ])
+        ) / 5;
+
+      // 픽셀 순회
+      for (var i = 4; i < pixels.length; i += 4) {
+        if (
+          // pixels[i] === 255 &&
+          // pixels[i + 1] === 255 &&
+          // pixels[i + 2] === 255
+          pixels[i] <= targetR + 8 &&
+          pixels[i] >= targetR - 8 &&
+          pixels[i + 1] <= targetG + 8 &&
+          pixels[i + 1] >= targetG - 8 &&
+          pixels[i + 2] <= targetB + 8 &&
+          pixels[i + 2] >= targetB - 8
+        ) {
+          _id.data[i] = 0;
+          _id.data[i + 1] = 0;
+          _id.data[i + 2] = 0;
+          _id.data[i + 3] = 0;
+        }
+      }
+      await ctx.putImageData(_id, 0, 0);
+      return ctx;
+    } catch {
+      alert('이미지 데이터를 제공하지 않는 쇼핑몰입니다.');
+    }
+  }
   return (
     <div className="popup">
       <header>
