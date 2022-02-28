@@ -1,14 +1,6 @@
 {
   "manifest_version": 3,
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "scripting",
-    "cookies",
-    "declarativeContent",
-    "storage",
-    "nativeMessaging"
-  ],
+  "permissions": ["tabs", "activeTab", "storage"],
   "name": "MOBA Chrome Extension",
   "description": "A chrome extension boilerplate built with React 17, Webpack 5, and Webpack Dev Server 4",
   "options_page": "options.html",
