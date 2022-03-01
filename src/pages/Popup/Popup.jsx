@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { ThreeDots } from 'react-loader-spinner';
 import '@fortawesome/fontawesome-free/js/all.js';
-import lodash from 'lodash';
 
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -15,8 +14,6 @@ const Popup = React.memo(function Popup() {
   const [curProducts, setCurProducts] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  // if (flag)
-  // flag = false;
   useEffect(() => {
     chrome.storage.local.get(['userStatus'], function (items) {
       const authToken = items.userStatus;
@@ -357,104 +354,182 @@ const Popup = React.memo(function Popup() {
         });
     });
   }
-  function filterOutliers(someArray) {
-    let values = someArray.slice().sort((a, b) => a - b); // copy array fast and sort
+  // function filterOutliers(someArray) {
+  //   let values = someArray.slice().sort((a, b) => a - b); // copy array fast and sort
 
-    let q1 = getQuantile(values, 25);
-    let q3 = getQuantile(values, 75);
+  //   let q1 = getQuantile(values, 25);
+  //   let q3 = getQuantile(values, 75);
 
-    let iqr, maxValue, minValue;
-    iqr = q3 - q1;
-    maxValue = q3 + iqr * 1.5;
-    minValue = q1 - iqr * 1.5;
+  //   let iqr, maxValue, minValue;
+  //   iqr = q3 - q1;
+  //   maxValue = q3 + iqr * 1.5;
+  //   minValue = q1 - iqr * 1.5;
 
-    return values.filter((x) => x >= minValue && x <= maxValue);
-  }
+  //   return values.filter((x) => x >= minValue && x <= maxValue);
+  // }
 
-  function getQuantile(array, quantile) {
-    // Get the index the quantile is at.
-    let index = (quantile / 100.0) * (array.length - 1);
+  // function getQuantile(array, quantile) {
+  //   // Get the index the quantile is at.
+  //   let index = (quantile / 100.0) * (array.length - 1);
 
-    // Check if it has decimal places.
-    if (index % 1 === 0) {
-      return array[index];
-    } else {
-      // Get the lower index.
-      let lowerIndex = Math.floor(index);
-      // Get the remaining.
-      let remainder = index - lowerIndex;
-      // Add the remaining to the lowerindex value.
-      return (
-        array[lowerIndex] +
-        remainder * (array[lowerIndex + 1] - array[lowerIndex])
-      );
-    }
-  }
+  //   // Check if it has decimal places.
+  //   if (index % 1 === 0) {
+  //     return array[index];
+  //   } else {
+  //     // Get the lower index.
+  //     let lowerIndex = Math.floor(index);
+  //     // Get the remaining.
+  //     let remainder = index - lowerIndex;
+  //     // Add the remaining to the lowerindex value.
+  //     return (
+  //       array[lowerIndex] +
+  //       remainder * (array[lowerIndex + 1] - array[lowerIndex])
+  //     );
+  //   }
+  // }
 
   async function Nooki(canvas, originalImg) {
     let ctx = canvas.getContext('2d');
     canvas.width = originalImg.naturalWidth;
     canvas.height = originalImg.naturalHeight;
     await ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
+    // console.log(canvas.width, canvas.height, 'here is the value that you want');
     // 복제된 이미지에 대한 pixel정보 가져옴
     // let _id = new Image();
     // _id.setAttribute('crossOrigin', '');
-
+    // let imgData = [];
+    // let arr = [];
+    // let idx = 0;
+    // for (let i = 0; i < canvas.height; i++) {
+    //   let arrayOfImgInRow;
+    //   for (let j; j < canvas.width; j++) {
+    //     arrayOfImgInRow = [];
+    //     let arrayOfRgb;
+    //     for (let k = 0; k < 4; k++) {
+    //       arrayOfRgb = [];
+    //       arrayOfRgb.push(imgData[idx++]);
+    //     }
+    //     arrayOfImgInRow.push(arrayOfRgb);
+    //   }
+    //   arr.push(arrayOfImgInRow);
+    // }
     try {
       const _id = await ctx.getImageData(0, 0, canvas.width, canvas.height);
       const pixels = _id.data;
-      const targetR =
-        lodash.sum(
-          filterOutliers([
-            pixels[0],
-            pixels[12],
-            pixels[24],
-            pixels[36],
-            pixels[48],
-          ])
-        ) / 5;
-      const targetG =
-        lodash.sum(
-          filterOutliers([
-            pixels[1],
-            pixels[13],
-            pixels[25],
-            pixels[37],
-            pixels[49],
-          ])
-        ) / 5;
-      const targetB =
-        lodash.sum(
-          filterOutliers([
-            pixels[2],
-            pixels[14],
-            pixels[26],
-            pixels[38],
-            pixels[50],
-          ])
-        ) / 5;
+      // console.log(pixels.length, "here is pixels's length");
+      // const targetR =
+      //   lodash.sum(
+      //     filterOutliers([
+      //       pixels[0],
+      //       pixels[12],
+      //       pixels[24],
+      //       pixels[36],
+      //       pixels[48],
+      //     ])
+      //   ) / 5;
+      // const targetG =
+      //   lodash.sum(
+      //     filterOutliers([
+      //       pixels[1],
+      //       pixels[13],
+      //       pixels[25],
+      //       pixels[37],
+      //       pixels[49],
+      //     ])
+      //   ) / 5;
+      // const targetB =
+      //   lodash.sum(
+      //     filterOutliers([
+      //       pixels[2],
+      //       pixels[14],
+      //       pixels[26],
+      //       pixels[38],
+      //       pixels[50],
+      //     ])
+      //   ) / 5;
 
-      console.log(targetR, targetG, targetB);
+      let arr = [];
+      let idx = 0;
+      for (let i = 0; i < canvas.height; i++) {
+        let arrayOfImgInRow = [];
+        for (let j = 0; j < canvas.width; j++) {
+          let arrayOfRgb = [];
+          for (let k = 0; k < 4; k++) {
+            arrayOfRgb.push(_id.data[idx++]);
+          }
+          arrayOfImgInRow.push(arrayOfRgb);
+        }
+        arr.push(arrayOfImgInRow);
+      }
 
-      // 픽셀 순회
-      for (var i = 4; i < pixels.length; i += 4) {
-        if (
-          // pixels[i] === 255 &&
-          // pixels[i + 1] === 255 &&
-          // pixels[i + 2] === 255
-          pixels[i] <= targetR + 10 &&
-          pixels[i] >= targetR - 10 &&
-          pixels[i + 1] <= targetG + 10 &&
-          pixels[i + 1] >= targetG - 10 &&
-          pixels[i + 2] <= targetB + 10 &&
-          pixels[i + 2] >= targetB - 10
-        ) {
-          pixels[i] = 0;
-          pixels[i + 1] = 0;
-          pixels[i + 2] = 0;
-          pixels[i + 3] = 0.2;
+      let visited = [];
+      for (let i = 0; i < arr.length; i++) {
+        let tmp = [];
+        for (let j = 0; j < arr[0].length; j++) {
+          tmp.push(false);
+        }
+        visited.push(tmp);
+      }
+      // let target_R = arr[0][0][0];
+      // let target_G = arr[0][0][1];
+      // let target_B = arr[0][0][2];
+
+      await stack_DFS(0, 0);
+      await stack_DFS(0, canvas.width - 1);
+      await stack_DFS(canvas.height - 1, canvas.width - 1);
+      await stack_DFS(canvas.height - 1, 0);
+
+      async function stack_DFS(x, y) {
+        let queue = [];
+        queue.push([x, y]);
+
+        while (queue.length > 0) {
+          let [current_x, current_y] = queue.pop();
+          visited[current_x][current_y] = true;
+          let dir_array = [
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1],
+          ];
+          for (let i = 0; i < 4; i++) {
+            let new_x = current_x + dir_array[i][0];
+            let new_y = current_y + dir_array[i][1];
+            if (
+              0 <= new_x &&
+              new_x < arr.length &&
+              0 <= new_y &&
+              new_y < arr[0].length
+            ) {
+              if (
+                visited[new_x][new_y] === false &&
+                arr[new_x][new_y][0] >= arr[current_x][current_y][0] - 1 &&
+                arr[new_x][new_y][0] <= arr[current_x][current_y][0] + 1 &&
+                arr[new_x][new_y][1] >= arr[current_x][current_y][1] - 1 &&
+                arr[new_x][new_y][1] <= arr[current_x][current_y][1] + 1 &&
+                arr[new_x][new_y][2] >= arr[current_x][current_y][2] - 1 &&
+                arr[new_x][new_y][2] <= arr[current_x][current_y][2] + 1
+              ) {
+                queue.push([new_x, new_y]);
+              }
+            }
+          }
         }
       }
+
+      let idx_ = 0;
+      for (let i = 0; i < canvas.height; i++) {
+        for (let j = 0; j < canvas.width; j++) {
+          if (visited[i][j]) {
+            pixels[idx_] = 0;
+            pixels[idx_ + 1] = 0;
+            pixels[idx_ + 2] = 0;
+            pixels[idx_ + 3] = 0;
+          }
+          idx_ = idx_ + 4;
+        }
+      }
+
       await ctx.putImageData(_id, 0, 0);
       return ctx;
     } catch {
