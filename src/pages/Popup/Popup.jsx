@@ -406,33 +406,35 @@ const Popup = React.memo(function Popup() {
       const targetR =
         lodash.sum(
           filterOutliers([
-            pixels[100],
-            pixels[104],
-            pixels[108],
-            pixels[112],
-            pixels[116],
+            pixels[0],
+            pixels[12],
+            pixels[24],
+            pixels[36],
+            pixels[48],
           ])
         ) / 5;
       const targetG =
         lodash.sum(
           filterOutliers([
-            pixels[101],
-            pixels[105],
-            pixels[109],
-            pixels[113],
-            pixels[117],
+            pixels[1],
+            pixels[13],
+            pixels[25],
+            pixels[37],
+            pixels[49],
           ])
         ) / 5;
       const targetB =
         lodash.sum(
           filterOutliers([
-            pixels[102],
-            pixels[106],
-            pixels[110],
-            pixels[114],
-            pixels[118],
+            pixels[2],
+            pixels[14],
+            pixels[26],
+            pixels[38],
+            pixels[50],
           ])
         ) / 5;
+
+      console.log(targetR, targetG, targetB);
 
       // 픽셀 순회
       for (var i = 4; i < pixels.length; i += 4) {
@@ -440,17 +442,17 @@ const Popup = React.memo(function Popup() {
           // pixels[i] === 255 &&
           // pixels[i + 1] === 255 &&
           // pixels[i + 2] === 255
-          pixels[i] <= targetR + 8 &&
-          pixels[i] >= targetR - 8 &&
-          pixels[i + 1] <= targetG + 8 &&
-          pixels[i + 1] >= targetG - 8 &&
-          pixels[i + 2] <= targetB + 8 &&
-          pixels[i + 2] >= targetB - 8
+          pixels[i] <= targetR + 10 &&
+          pixels[i] >= targetR - 10 &&
+          pixels[i + 1] <= targetG + 10 &&
+          pixels[i + 1] >= targetG - 10 &&
+          pixels[i + 2] <= targetB + 10 &&
+          pixels[i + 2] >= targetB - 10
         ) {
-          _id.data[i] = 0;
-          _id.data[i + 1] = 0;
-          _id.data[i + 2] = 0;
-          _id.data[i + 3] = 0;
+          pixels[i] = 0;
+          pixels[i + 1] = 0;
+          pixels[i + 2] = 0;
+          pixels[i + 3] = 0.2;
         }
       }
       await ctx.putImageData(_id, 0, 0);
