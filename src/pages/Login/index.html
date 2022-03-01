@@ -5,35 +5,55 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="Login.css" />
   </head>
-
-  <body style="background-color: black; display: flex">
-    <form action="Login.js" method="post">
-      <input id="id" type="text" placeholder="아이디 입력하세요" />
-      <input id="password" type="password" placeholder="비밀번호 입력하세요" />
-      <button
-        type="submit"
-        style="
-          color: black;
-          background-color: rgba(244, 116, 35, 1);
-          font-weight: bold;
-        "
-      >
-        로그인
-      </button>
-    </form>
-    <form id="register" action="Login.js" method="post">
-      <button
-        type="submit"
-        style="
-          color: black;
-          background-color: rgba(244, 116, 35, 1);
-          font-weight: bold;
-        "
-      >
-        회원가입
-      </button>
-    </form>
+  <style>
+    @font-face {
+      font-family: 'TmoneyRoundWindExtraBold';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-07@1.0/TmoneyRoundWindExtraBold.woff')
+        format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      width: 300px;
+      height: 200px;
+      margin: 0;
+      font-family: 'TmoneyRoundWindExtraBold';
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      position: relative;
+    }
+    body span {
+      font-size: 20px;
+    }
+    .login__box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+  <body>
+    <div class="login__box">
+      <div class="login__title">
+        <span>MOBA 로그인</span>
+      </div>
+      <div class="login__form">
+        <form action="Login.js" method="post">
+          <input id="id" type="text" placeholder="아이디 입력하세요" />
+          <input
+            id="password"
+            type="password"
+            placeholder="비밀번호 입력하세요"
+          />
+          <button id="loginBtn" type="submit">로그인</button>
+        </form>
+        <form id="register" action="Login.js" method="post">
+          <button type="submit">회원가입</button>
+        </form>
+      </div>
+    </div>
 
     <script type="text/javascript" src="jquery.js"></script>
     <script src="Login.js"></script>

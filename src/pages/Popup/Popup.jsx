@@ -73,10 +73,10 @@ const Popup = React.memo(function Popup() {
                 break;
             }
           })
-          .catch(
-            // 리퀘스트 실패 - then 보다 catch 가 먼저 실행됨..
-            console.log('get shopping mall html request is failed')
-          );
+          .catch
+          // 리퀘스트 실패 - then 보다 catch 가 먼저 실행됨..
+          // console.log('get shopping mall html request is failed')
+          ();
       } else {
         // 서비스 가능한 사이트가 아닌 경우
         setIsSupported(true);
@@ -335,7 +335,7 @@ const Popup = React.memo(function Popup() {
           data: { token: authToken, products: product, shop_url: shop_url },
         })
         .then((response) => {
-          console.log(response);
+          // console.log(response);
         })
         .then((response) => {
           toast.success('장바구니 삭제 완료!', {
@@ -665,7 +665,7 @@ const Popup = React.memo(function Popup() {
           모바로 이동
         </button>
         <button className="mobaBtn" onClick={logOut}>
-          로그 아웃
+          로그아웃
         </button>
       </div>
       <div className="myBasket">
