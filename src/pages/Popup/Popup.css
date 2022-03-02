@@ -92,6 +92,7 @@ img {
   border-radius: 10px;
 }
 .image__description {
+  padding: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -110,6 +111,7 @@ img {
   font-size: 1.6em;
   font-weight: 600;
 }
+
 .image__description p:last-child {
   font-size: 1.7em;
   font-weight: 600;
@@ -263,6 +265,7 @@ img {
   border: 0;
   border-bottom: 2px solid #f37423;
   width: 180px;
+  margin-top: 15px;
 }
 .inputUrl:focus {
   outline: none;
@@ -296,6 +299,7 @@ img {
   position: absolute;
   visibility: hidden;
   cursor: pointer;
+  bottom: 0;
 }
 
 .addProductIcon {
@@ -317,4 +321,8 @@ img {
 .newImg__title {
   font-size: 20px;
   margin-bottom: 15px;
+}
+
+#changeImgUrl {
+  margin-left: 10px;
 }
