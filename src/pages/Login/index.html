@@ -15,7 +15,7 @@
       font-style: normal;
     }
     body {
-      width: 300px;
+      width: 250px;
       height: 200px;
       margin: 0;
       font-family: 'TmoneyRoundWindExtraBold';
@@ -24,7 +24,7 @@
       position: relative;
     }
     body span {
-      font-size: 20px;
+      font-size: 25px;
     }
     .login__box {
       display: flex;
@@ -32,24 +32,104 @@
       align-items: center;
       flex-direction: column;
     }
+    header {
+      background-color: black;
+      color: #f37423;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 30px;
+      width: 100%;
+    }
+    header span {
+      font-size: 20px;
+      font-weight: 700;
+      margin-left: 5px;
+    }
+    #register button {
+      font-family: 'TmoneyRoundWindExtraBold';
+      border: 0;
+      background-color: black;
+      color: #f37423;
+      cursor: pointer;
+      margin-right: 3px;
+    }
+    .login__form__box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .login__form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .login__title {
+      margin-top: 10px;
+    }
+    input {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      -o-appearance: none;
+      appearance: none;
+      border: 0;
+      border-bottom: 3px solid #f37423;
+      width: 135px;
+      margin-top: 10px;
+      font-family: 'TmoneyRoundWindExtraBold';
+    }
+    input:focus {
+      outline: none;
+    }
+    input::placeholder {
+      opacity: 0.5;
+    }
+    #loginBtn {
+      font-family: 'TmoneyRoundWindExtraBold';
+      background-color: #f37423;
+      color: white;
+      width: 70px;
+      height: 30px;
+      margin: 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+      transition: all 235ms ease-in-out;
+    }
+    #loginBtn {
+      margin-top: 10px;
+    }
   </style>
   <body>
     <div class="login__box">
+      <header>
+        <span>MOBA</span>
+        <form id="register" action="Login.js" method="post">
+          <button type="submit">회원가입</button>
+        </form>
+      </header>
       <div class="login__title">
-        <span>MOBA 로그인</span>
+        <span>로그인</span>
       </div>
-      <div class="login__form">
-        <form action="Login.js" method="post">
-          <input id="id" type="text" placeholder="아이디 입력하세요" />
+      <div class="login__form__box">
+        <form class="login__form" action="Login.js" method="post">
+          <input
+            autofocus
+            id="id"
+            type="text"
+            placeholder="아이디를 입력하세요"
+          />
           <input
             id="password"
             type="password"
-            placeholder="비밀번호 입력하세요"
+            placeholder="비밀번호를 입력하세요"
           />
           <button id="loginBtn" type="submit">로그인</button>
-        </form>
-        <form id="register" action="Login.js" method="post">
-          <button type="submit">회원가입</button>
         </form>
       </div>
     </div>

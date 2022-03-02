@@ -445,6 +445,9 @@ const Popup = React.memo(function Popup() {
     <div className="popup">
       <header>
         <span>MOBA</span>
+        <button className="logoutBtn" onClick={logOut}>
+          로그아웃
+        </button>
       </header>
       <div style={{ display: 'none' }}>
         <img className="img__original" alt="img" />
@@ -522,8 +525,8 @@ const Popup = React.memo(function Popup() {
               </form>
             </div>
             <div className="image__addBtn">
-              <button form="addMyCart" id="inputBoxBtn">
-                저장
+              <button form="addMyCart" id="inputBoxBtn" type="submit">
+                담기
               </button>
             </div>
           </div>
@@ -581,41 +584,41 @@ const Popup = React.memo(function Popup() {
             )}
             <div className="image__addBtn">
               <button type="submit" id="addBtn" onClick={handleClick}>
-                저장
+                담기
               </button>
             </div>
           </div>
         )}
       </div>
-
       <div className="myBasket__container">
-        <span className="myBasket__title">내 장바구니</span>
-        <button className="mobaBtn" onClick={moveToMain}>
-          모바로 이동
-        </button>
-        <button className="mobaBtn" onClick={logOut}>
-          로그아웃
-        </button>
-      </div>
-      <div className="myBasket">
-        {products?.map((item, index) => (
-          <div key={index} className="container">
-            <img src={item.img} alt="img" />
-            <p>
-              <strong>{item.shop_name}</strong>
-            </p>
-            <p>{item.product_name}</p>
-            <p>
-              <strong>{item.sale_price} 원</strong>
-            </p>
-            <button
-              className="delBtn"
-              onClick={() => deleteItem(products, item.shop_url)}
-            >
-              <i className="fa-solid fa-xmark fa-2xl"></i>
-            </button>
-          </div>
-        ))}
+        <div className="myBasket__title__box">
+          <span className="myBasket__title">내 장바구니</span>
+          <button className="mobaBtn" onClick={moveToMain}>
+            모바로 이동
+          </button>
+        </div>
+        <div className="myBasket">
+          {products?.map((item, index) => (
+            <div key={index} className="container">
+              <img src={item.img} alt="img" />
+              <p>
+                <strong>{item.shop_name}</strong>
+              </p>
+              <div className="product__name">
+                <p>{item.product_name}</p>
+              </div>
+              <p className="product__price">
+                <strong>{item.sale_price}원</strong>
+              </p>
+              <button
+                className="delBtn"
+                onClick={() => deleteItem(products, item.shop_url)}
+              >
+                <i className="fa-solid fa-xmark fa-2xl"></i>
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

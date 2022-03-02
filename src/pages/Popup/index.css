@@ -15,6 +15,33 @@ body {
 
   position: relative;
 }
+body::-webkit-scrollbar {
+  visibility: hidden;
+  cursor: pointer;
+  width: 8px;
+  height: 10px;
+  /* display: none; */
+}
+
+body::-webkit-scrollbar-thumb {
+  visibility: hidden;
+  cursor: pointer;
+  background-color: white; /*스크롤바의 색상*/
+  border: 1px solid white;
+}
+body:hover::-webkit-scrollbar {
+  visibility: visible;
+  cursor: pointer;
+  width: 8px;
+}
+
+body:hover::-webkit-scrollbar-thumb {
+  visibility: visible;
+  cursor: pointer;
+  background-color: #9d9d9d; /*스크롤바의 색상*/
+  border: 1px solid grey;
+  border-radius: 10px;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
