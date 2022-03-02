@@ -106,7 +106,7 @@ img {
 }
 
 .image__description p:first-child {
-  font-size: 1.4em;
+  font-size: 1.6em;
   font-weight: 600;
 }
 .image__description p:last-child {
@@ -188,7 +188,7 @@ img {
   white-space: nowrap;
 }
 .product__price {
-  font-size: 17px;
+  font-size: 16px;
 }
 .delBtn {
   position: absolute;
