@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { ThreeDots } from 'react-loader-spinner';
 import '@fortawesome/fontawesome-free/js/all.js';
+import { AiFillPlusCircle } from 'react-icons/ai';
 
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -14,6 +15,8 @@ const Popup = React.memo(function Popup() {
   const [curProducts, setCurProducts] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
+  const [needUrlInput, setNeedUrlInput] = useState(false);
+
   useEffect(() => {
     chrome.storage.local.get(['userStatus'], function (items) {
       const authToken = items.userStatus;
@@ -54,29 +57,22 @@ const Popup = React.memo(function Popup() {
           'www.brandi.co.kr',
         ].includes(cur_shop)
       ) {
-        // document.querySelector('.conditional__container').style.display = 'none';
-        await axios
-          .get(url)
-          .then((dataa) => {
-            const html = dataa.data;
-            switch (cur_shop) {
-              case 'www.wconcept.co.kr':
-                new_product = w_concept(html, url);
-                break;
-              case 'store.musinsa.com':
-                new_product = musinsa(html, url);
-                break;
-              case 'www.brandi.co.kr':
-                new_product = brandi(html, url);
-                break;
-              default:
-                break;
-            }
-          })
-          .catch
-          // 리퀘스트 실패 - then 보다 catch 가 먼저 실행됨..
-          // console.log('get shopping mall html request is failed')
-          ();
+        await axios.get(url).then((dataa) => {
+          const html = dataa.data;
+          switch (cur_shop) {
+            case 'www.wconcept.co.kr':
+              new_product = w_concept(html, url);
+              break;
+            case 'store.musinsa.com':
+              new_product = musinsa(html, url);
+              break;
+            case 'www.brandi.co.kr':
+              new_product = brandi(html, url);
+              break;
+            default:
+              break;
+          }
+        });
       } else {
         // 서비스 가능한 사이트가 아닌 경우
         setIsSupported(true);
@@ -198,7 +194,6 @@ const Popup = React.memo(function Popup() {
     price: '',
     shopName: '',
   });
-
   const onChange = (e) => {
     const { name, value } = e.target;
     setInputs({ ...inputs, [name]: value });
@@ -239,11 +234,7 @@ const Popup = React.memo(function Popup() {
   async function removeBackground(new_product) {
     const canvas = document.querySelector('#myCanvas');
     const originalImg = document.querySelector('.img__original');
-    // let removedBgImg;
     originalImg.src = new_product.img; //불러온 이미지로 변경
-
-    // canvas에 이미지 복제
-    // let ctx = canvas.getContext('2d');
 
     originalImg.onload = async () => {
       if (await Nooki(canvas, originalImg)) {
@@ -314,6 +305,9 @@ const Popup = React.memo(function Popup() {
   }
 
   async function handleClick() {
+    if (needUrlInput) {
+      new_product.img = inputs.url;
+    }
     await removeBackground(new_product);
   }
 
@@ -324,6 +318,7 @@ const Popup = React.memo(function Popup() {
     chrome.storage.local.set({
       userStatus: '',
     });
+
     window.location.href = 'login.html';
   }
 
@@ -354,99 +349,14 @@ const Popup = React.memo(function Popup() {
         });
     });
   }
-  // function filterOutliers(someArray) {
-  //   let values = someArray.slice().sort((a, b) => a - b); // copy array fast and sort
-
-  //   let q1 = getQuantile(values, 25);
-  //   let q3 = getQuantile(values, 75);
-
-  //   let iqr, maxValue, minValue;
-  //   iqr = q3 - q1;
-  //   maxValue = q3 + iqr * 1.5;
-  //   minValue = q1 - iqr * 1.5;
-
-  //   return values.filter((x) => x >= minValue && x <= maxValue);
-  // }
-
-  // function getQuantile(array, quantile) {
-  //   // Get the index the quantile is at.
-  //   let index = (quantile / 100.0) * (array.length - 1);
-
-  //   // Check if it has decimal places.
-  //   if (index % 1 === 0) {
-  //     return array[index];
-  //   } else {
-  //     // Get the lower index.
-  //     let lowerIndex = Math.floor(index);
-  //     // Get the remaining.
-  //     let remainder = index - lowerIndex;
-  //     // Add the remaining to the lowerindex value.
-  //     return (
-  //       array[lowerIndex] +
-  //       remainder * (array[lowerIndex + 1] - array[lowerIndex])
-  //     );
-  //   }
-  // }
-
   async function Nooki(canvas, originalImg) {
     let ctx = canvas.getContext('2d');
     canvas.width = originalImg.naturalWidth;
     canvas.height = originalImg.naturalHeight;
     await ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
-    // console.log(canvas.width, canvas.height, 'here is the value that you want');
-    // 복제된 이미지에 대한 pixel정보 가져옴
-    // let _id = new Image();
-    // _id.setAttribute('crossOrigin', '');
-    // let imgData = [];
-    // let arr = [];
-    // let idx = 0;
-    // for (let i = 0; i < canvas.height; i++) {
-    //   let arrayOfImgInRow;
-    //   for (let j; j < canvas.width; j++) {
-    //     arrayOfImgInRow = [];
-    //     let arrayOfRgb;
-    //     for (let k = 0; k < 4; k++) {
-    //       arrayOfRgb = [];
-    //       arrayOfRgb.push(imgData[idx++]);
-    //     }
-    //     arrayOfImgInRow.push(arrayOfRgb);
-    //   }
-    //   arr.push(arrayOfImgInRow);
-    // }
     try {
       const _id = await ctx.getImageData(0, 0, canvas.width, canvas.height);
       const pixels = _id.data;
-      // console.log(pixels.length, "here is pixels's length");
-      // const targetR =
-      //   lodash.sum(
-      //     filterOutliers([
-      //       pixels[0],
-      //       pixels[12],
-      //       pixels[24],
-      //       pixels[36],
-      //       pixels[48],
-      //     ])
-      //   ) / 5;
-      // const targetG =
-      //   lodash.sum(
-      //     filterOutliers([
-      //       pixels[1],
-      //       pixels[13],
-      //       pixels[25],
-      //       pixels[37],
-      //       pixels[49],
-      //     ])
-      //   ) / 5;
-      // const targetB =
-      //   lodash.sum(
-      //     filterOutliers([
-      //       pixels[2],
-      //       pixels[14],
-      //       pixels[26],
-      //       pixels[38],
-      //       pixels[50],
-      //     ])
-      //   ) / 5;
 
       let arr = [];
       let idx = 0;
@@ -470,10 +380,6 @@ const Popup = React.memo(function Popup() {
         }
         visited.push(tmp);
       }
-      // let target_R = arr[0][0][0];
-      // let target_G = arr[0][0][1];
-      // let target_B = arr[0][0][2];
-
       await stack_DFS(0, 0);
       await stack_DFS(0, canvas.width - 1);
       await stack_DFS(canvas.height - 1, canvas.width - 1);
@@ -529,7 +435,6 @@ const Popup = React.memo(function Popup() {
           idx_ = idx_ + 4;
         }
       }
-
       await ctx.putImageData(_id, 0, 0);
       return ctx;
     } catch {
@@ -617,7 +522,7 @@ const Popup = React.memo(function Popup() {
               </form>
             </div>
             <div className="image__addBtn">
-              <button form="addMyCart" id="inputBoxBtn" type="submit">
+              <button form="addMyCart" id="inputBoxBtn">
                 저장
               </button>
             </div>
@@ -643,15 +548,39 @@ const Popup = React.memo(function Popup() {
         ) : (
           <div id="imageBox">
             <div className="image__container">
-              <img className="currentImg" src={curProducts?.img} alt="img" />
+              <div className="productBox">
+                <img className="currentImg" src={curProducts?.img} alt="img" />
+                <AiFillPlusCircle
+                  className="addProductIcon"
+                  onClick={() => {
+                    needUrlInput
+                      ? setNeedUrlInput(false)
+                      : setNeedUrlInput(true);
+                  }}
+                  color="orange"
+                  size="50"
+                />
+              </div>
+              <div className="addProductText"> 다른 이미지 저장하기</div>
             </div>
-            <div className="image__description">
-              <p>{curProducts?.shop_name}</p>
-              <p>{curProducts?.product_name}</p>
-              <p>{curProducts?.sale_price} 원</p>
-            </div>
+            {!needUrlInput ? (
+              <div className="image__description">
+                <p>{curProducts?.shop_name}</p>
+                <p>{curProducts?.product_name}</p>
+                <p>{curProducts?.sale_price} 원</p>
+              </div>
+            ) : (
+              <input
+                className="input"
+                name="url"
+                type="url"
+                placeholder="이미지 오른쪽클릭후 이미지 주소 복사"
+                onChange={onChange}
+                value={inputs.url}
+              ></input>
+            )}
             <div className="image__addBtn">
-              <button id="addBtn" onClick={handleClick}>
+              <button type="submit" id="addBtn" onClick={handleClick}>
                 저장
               </button>
             </div>
