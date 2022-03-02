@@ -309,6 +309,13 @@ const Popup = React.memo(function Popup() {
       new_product.img = inputs.url;
     }
     await removeBackground(new_product);
+    setNeedUrlInput(false);
+    setInputs({
+      productName: '',
+      url: '',
+      price: '',
+      shopName: '',
+    });
   }
 
   function moveToMain() {
@@ -567,29 +574,42 @@ const Popup = React.memo(function Popup() {
               <div className="addProductText"> 다른 이미지로 바꾸기</div>
             </div>
             {!needUrlInput ? (
-              <div className="image__description">
-                <p>{curProducts?.shop_name}</p>
-                <p>{curProducts?.product_name}</p>
-                <p>{curProducts?.sale_price} 원</p>
-              </div>
+              <>
+                <div className="image__description">
+                  <p>{curProducts?.shop_name}</p>
+                  <p>{curProducts?.product_name}</p>
+                  <p>{curProducts?.sale_price} 원</p>
+                </div>
+                <div className="image__addBtn">
+                  <button onClick={handleClick} type="submit" id="addBtn">
+                    담기
+                  </button>
+                </div>
+              </>
             ) : (
-              <div className="image__description">
-                <span className="newImg__title">새로운 이미지로 저장</span>
-                <input
-                  className="inputUrl"
-                  name="url"
-                  type="url"
-                  placeholder="이미지 url을 넣으세요"
-                  onChange={onChange}
-                  value={inputs.url}
-                ></input>
-              </div>
+              <>
+                <div className="image__description">
+                  <form onSubmit={handleClick} id="changeImgUrl">
+                    <label className="newImg__title" htmlFor="imgUrl">
+                      새로운 이미지로 저장
+                    </label>
+                    <input
+                      className="inputUrl"
+                      name="url"
+                      type="url"
+                      placeholder="이미지 url을 넣으세요"
+                      onChange={onChange}
+                      value={inputs.url}
+                    ></input>
+                  </form>
+                </div>
+                <div className="image__addBtn">
+                  <button form="changeImgUrl" type="submit" id="addBtn">
+                    담기
+                  </button>
+                </div>
+              </>
             )}
-            <div className="image__addBtn">
-              <button type="submit" id="addBtn" onClick={handleClick}>
-                담기
-              </button>
-            </div>
           </div>
         )}
       </div>
