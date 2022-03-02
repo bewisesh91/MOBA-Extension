@@ -7,8 +7,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
-  margin: 10px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+    rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
+    rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+  margin: 15px;
   position: relative;
   border-radius: 10px;
   transition: all 235ms ease-in-out;
@@ -20,6 +22,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 5px;
 }
 .currentTitle {
   font-size: 20px;
@@ -42,6 +45,22 @@ header {
   align-items: center;
   height: 30px;
 }
+header span {
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 5px;
+}
+.logoutBtn {
+  margin: 0;
+  border: none;
+  color: #f37423;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: black;
+  margin-right: 10px;
+  font-family: 'TmoneyRoundWindExtraBold';
+}
 .mobaBtn {
   background-color: #f37423;
   color: white;
@@ -49,20 +68,17 @@ header {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  height: 28px;
+  height: 33px;
+  width: 100px;
   font-size: 15px;
   font-weight: 600;
   margin-right: 30px;
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
+  font-family: 'TmoneyRoundWindExtraBold';
 }
 .mobaBtn:hover {
-  transform: scale(1.1);
-}
-header span {
-  font-size: 20px;
-  font-weight: 700;
-  margin-left: 3px;
+  transform: scale(1.05);
 }
 .title {
   font-size: 20px;
@@ -94,7 +110,7 @@ img {
   font-weight: 600;
 }
 .image__description p:last-child {
-  font-size: 1.4em;
+  font-size: 1.7em;
   font-weight: 600;
 }
 .image__addBtn {
@@ -110,23 +126,28 @@ img {
   height: 40px;
   margin: 0;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 18px;
   font-weight: 600;
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
+  font-family: 'TmoneyRoundWindExtraBold';
 }
 #addBtn:hover {
   transform: scale(1.06);
 }
 .myBasket__container {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.myBasket__title__box {
+  display: flex;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
-}
-.myBasket__container button {
-  margin-right: 35 px;
 }
 .myBasket {
   display: flex;
@@ -141,15 +162,16 @@ img {
   font-size: 20px;
   margin-left: 35px;
 }
+
 .container {
   width: 120px;
   height: 180px;
   padding: 7px;
   margin: 7px;
   border-radius: 10px;
-  overflow: hidden;
+  /* overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: nowrap; */
   box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
   display: flex;
@@ -158,6 +180,15 @@ img {
 }
 .container:hover {
   transform: scale(1.1);
+}
+.product__name p {
+  width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.product__price {
+  font-size: 17px;
 }
 .delBtn {
   position: absolute;
@@ -204,7 +235,7 @@ img {
   height: 40px;
   margin: 0;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 18px;
   font-weight: 600;
