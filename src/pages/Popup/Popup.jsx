@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { ThreeDots } from 'react-loader-spinner';
 import '@fortawesome/fontawesome-free/js/all.js';
-import { AiFillPlusCircle } from 'react-icons/ai';
+import { FiPlusCircle } from 'react-icons/fi';
 
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -551,20 +551,20 @@ const Popup = React.memo(function Popup() {
         ) : (
           <div id="imageBox">
             <div className="image__container">
-              <div className="productBox">
+              <div
+                onClick={() => {
+                  needUrlInput ? setNeedUrlInput(false) : setNeedUrlInput(true);
+                }}
+                className="productBox"
+              >
                 <img className="currentImg" src={curProducts?.img} alt="img" />
-                <AiFillPlusCircle
+                <FiPlusCircle
                   className="addProductIcon"
-                  onClick={() => {
-                    needUrlInput
-                      ? setNeedUrlInput(false)
-                      : setNeedUrlInput(true);
-                  }}
                   color="orange"
                   size="50"
                 />
               </div>
-              <div className="addProductText"> 다른 이미지 저장하기</div>
+              <div className="addProductText"> 다른 이미지로 바꾸기</div>
             </div>
             {!needUrlInput ? (
               <div className="image__description">
@@ -573,14 +573,17 @@ const Popup = React.memo(function Popup() {
                 <p>{curProducts?.sale_price} 원</p>
               </div>
             ) : (
-              <input
-                className="input"
-                name="url"
-                type="url"
-                placeholder="이미지 오른쪽클릭후 이미지 주소 복사"
-                onChange={onChange}
-                value={inputs.url}
-              ></input>
+              <div className="image__description">
+                <span className="newImg__title">새로운 이미지로 저장</span>
+                <input
+                  className="inputUrl"
+                  name="url"
+                  type="url"
+                  placeholder="이미지 url을 넣으세요"
+                  onChange={onChange}
+                  value={inputs.url}
+                ></input>
+              </div>
             )}
             <div className="image__addBtn">
               <button type="submit" id="addBtn" onClick={handleClick}>
