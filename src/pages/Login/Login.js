@@ -6,12 +6,13 @@ chrome.storage.local.get(['userStatus'], function (items) {
   }
 });
 
-document.querySelector('form').addEventListener('submit', (e) => {
+document.querySelector('.login__form').addEventListener('submit', (e) => {
   e.preventDefault();
 
   const id = document.querySelector('#id').value;
   const password = document.querySelector('#password').value;
-
+  console.log(id, 'id');
+  console.log(password, 'pw');
   // eslint-disable-next-line no-undef
   $.ajax({
     url: 'http://127.0.0.1:8000/api/users/login',
@@ -36,5 +37,5 @@ document.querySelector('form').addEventListener('submit', (e) => {
 
 document.getElementById('register').addEventListener('submit', (e) => {
   e.preventDefault();
-  chrome.tabs.create({ url: 'localhost:3000' });
+  chrome.tabs.create({ url: 'localhost:3000/register' });
 });
