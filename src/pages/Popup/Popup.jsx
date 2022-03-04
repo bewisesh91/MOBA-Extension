@@ -22,7 +22,7 @@ const Popup = React.memo(function Popup() {
       const authToken = items.userStatus;
 
       axios
-        .post('http://127.0.0.1:8000/privatebasket/basket', {
+        .post('http://moba-shop.link:8000/privatebasket/basket', {
           token: authToken,
         })
         .then((Response) => {
@@ -243,7 +243,7 @@ const Popup = React.memo(function Popup() {
           /** ---------------- S3  start ---------------- */
           // get secure S3 url from our server
           const target =
-            'http://127.0.0.1:8000/s3Url/' +
+            'http://moba-shop.link:8000/s3Url/' +
             new_product.img?.split('https://')[1].replaceAll('/', '-');
           const S3url = await fetch(target).then((res) => res.json());
 
@@ -277,7 +277,7 @@ const Popup = React.memo(function Popup() {
             const authToken = items.userStatus;
 
             axios
-              .post('http://127.0.0.1:8000/privatebasket', {
+              .post('http://moba-shop.link:8000/privatebasket', {
                 token: authToken,
                 products: [new_product],
               })
@@ -319,7 +319,7 @@ const Popup = React.memo(function Popup() {
   }
 
   function moveToMain() {
-    chrome.tabs.create({ url: 'localhost:3000/createroom' });
+    chrome.tabs.create({ url: 'moba-shop.link:3000/mainpage' });
   }
   function logOut() {
     chrome.storage.local.set({
@@ -333,7 +333,7 @@ const Popup = React.memo(function Popup() {
     chrome.storage.local.get(['userStatus'], function (items) {
       const authToken = items.userStatus;
       axios
-        .delete('http://127.0.0.1:8000/privatebasket/product', {
+        .delete('http://moba-shop.link:8000/privatebasket/product', {
           data: { token: authToken, products: product, shop_url: shop_url },
         })
         .then((response) => {

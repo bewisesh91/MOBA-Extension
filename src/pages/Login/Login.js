@@ -11,11 +11,10 @@ document.querySelector('.login__form').addEventListener('submit', (e) => {
 
   const id = document.querySelector('#id').value;
   const password = document.querySelector('#password').value;
-  console.log(id, 'id');
-  console.log(password, 'pw');
+	
   // eslint-disable-next-line no-undef
   $.ajax({
-    url: 'http://127.0.0.1:8000/api/users/login',
+    url: 'http://moba-shop.link:8000/api/users/login',
     type: 'POST',
     data: {
       username: id,
@@ -37,5 +36,5 @@ document.querySelector('.login__form').addEventListener('submit', (e) => {
 
 document.getElementById('register').addEventListener('submit', (e) => {
   e.preventDefault();
-  chrome.tabs.create({ url: 'localhost:3000/register' });
+  chrome.tabs.create({ url: 'moba-shop.link:3000/register' });
 });
