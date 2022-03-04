@@ -90,8 +90,21 @@ const Popup = React.memo(function Popup() {
   }, []);
   // w-concept
   function w_concept(html, url) {
-    let shop_name, shop_url, img_url, product_name, price, sale_price;
+    let shop_name, shop_url, img_url, product_name, price, sale_price, category;
+
     const $ = cheerio.load(html); // html load
+    if ($('#cateDepth3 > button').text() === '아우터') {
+      category = '아우터';
+    } else if (
+      $('#cateDepth3 > button').text() === '데님' ||
+      $('#cateDepth3 > button').text() === '팬츠'
+    ) {
+      category = '하의';
+    } else if (
+      $('#prdLocaiton > li:nth-child(3) > button').text() === 'SHOES'
+    ) {
+      category = '신발';
+    } else category = '상의';
 
     product_name = $("meta[property='og:description']").attr('content');
     price = $("meta[property='eg:originalPrice']").attr('content');
@@ -101,6 +114,7 @@ const Popup = React.memo(function Popup() {
     img_url = $("meta[property='og:image']").attr('content');
 
     const new_product = {
+      category: category,
       product_name: product_name,
       price: price,
       sale_price: sale_price,
@@ -114,8 +128,38 @@ const Popup = React.memo(function Popup() {
 
   // 무신사
   function musinsa(html, url) {
-    let shop_name, shop_url, img_url, product_name, price, sale_price;
+    let shop_name, shop_url, img_url, product_name, price, sale_price, category;
     const $ = cheerio.load(html); // html load
+
+    if (
+      $(
+        '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
+      ).text() === '바지'
+    ) {
+      category = '하의';
+    } else if (
+      $(
+        '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
+      ).text() === '스커트'
+    ) {
+      category = '하의';
+    } else if (
+      $(
+        '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
+      ).text() === '스니커즈'
+    ) {
+      category = '신발';
+    } else if (
+      $(
+        '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
+      ).text() === '원피스'
+    ) {
+      category = '상의';
+    } else {
+      category = $(
+        '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
+      ).text();
+    }
 
     product_name = $(
       '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > span > em'
@@ -145,6 +189,7 @@ const Popup = React.memo(function Popup() {
     img_url = $("meta[property='og:image']").attr('content');
 
     const new_product = {
+      category: category,
       product_name: product_name,
       price: Number(price),
       sale_price: sale_price,
@@ -157,7 +202,7 @@ const Popup = React.memo(function Popup() {
 
   // 브랜디
   function brandi(html, url) {
-    let shop_name, img_url, product_name, price, sale_price, shop_url;
+    let shop_name, img_url, product_name, price, sale_price, shop_url, category;
     const $ = cheerio.load(html); // html load
 
     shop_name = '브랜디';
@@ -176,6 +221,7 @@ const Popup = React.memo(function Popup() {
     sale_price = Number(sale_price?.split(',').reduce((a, b) => a + b));
 
     const new_product = {
+      category: category,
       product_name: product_name,
       price: price,
       sale_price: sale_price,
@@ -242,6 +288,7 @@ const Popup = React.memo(function Popup() {
           const removedBgImg = canvas.toDataURL('image/png');
           /** ---------------- S3  start ---------------- */
           // get secure S3 url from our server
+
           const target =
             'http://127.0.0.1:8000/s3Url/' +
             new_product.img?.split('https://')[1].replaceAll('/', '-');
@@ -319,7 +366,7 @@ const Popup = React.memo(function Popup() {
   }
 
   function moveToMain() {
-    chrome.tabs.create({ url: 'localhost:3000/createroom' });
+    chrome.tabs.create({ url: 'https://moba-shop.link/createroom' });
   }
   function logOut() {
     chrome.storage.local.set({
