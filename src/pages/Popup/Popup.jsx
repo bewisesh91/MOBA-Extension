@@ -239,6 +239,7 @@ const Popup = React.memo(function Popup() {
     url: '',
     price: '',
     shopName: '',
+    category: '',
   });
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -252,6 +253,7 @@ const Popup = React.memo(function Popup() {
     const imgUrl = inputs.url;
     const productPrice = inputs.price;
     const shopName = inputs.shopName;
+    const category = inputs.category;
 
     chrome.tabs.query(
       { currentWindow: true, active: true },
@@ -259,6 +261,7 @@ const Popup = React.memo(function Popup() {
         const shopUrl = tabs[0].url;
 
         const new_product = {
+          category: category,
           product_name: productName,
           price: productPrice,
           sale_price: productPrice,
@@ -274,6 +277,7 @@ const Popup = React.memo(function Popup() {
       url: '',
       price: '',
       shopName: '',
+      category: '',
     });
   };
 
@@ -362,6 +366,7 @@ const Popup = React.memo(function Popup() {
       url: '',
       price: '',
       shopName: '',
+      category: '',
     });
   }
 
@@ -543,6 +548,35 @@ const Popup = React.memo(function Popup() {
                     value={inputs.productName}
                   ></input>
                 </div>
+                {/* <div className="input__box">
+                  <label htmlFor="category">상품 카테고리</label>
+                  <input
+                    autoFocus
+                    className="input"
+                    name="category"
+                    type="text"
+                    placeholder="상품 카테고리을 입력해주세요"
+                    onChange={onChange}
+                    value={inputs.category}
+                  ></input>
+                </div> */}
+                <div className="input__box">
+                  <label htmlFor="category">상품 카테고리</label>
+                  <select
+                    autoFocus
+                    className="input"
+                    name="category"
+                    onChange={onChange}
+                    value={inputs.category}
+                  >
+                    <option value=""> 상품 카테고리를 선택해주세요 </option>
+                    <option value="아우터">아우터</option>
+                    <option value="상의">상의</option>
+                    <option value="하의">하의</option>
+                    <option value="신발">신발</option>
+                  </select>
+                </div>
+
                 <div className="input__box">
                   <label htmlFor="imgUrl">이미지 주소</label>
                   <input
