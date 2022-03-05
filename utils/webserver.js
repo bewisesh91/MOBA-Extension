@@ -40,7 +40,7 @@ var server = new WebpackDevServer(
       directory: path.join(__dirname, '../build'),
     },
     devMiddleware: {
-      publicPath: `http://moba-shop.link:${env.PORT}/`,
+      publicPath: `http://localhost:${env.PORT}/`,
       writeToDisk: true,
     },
     headers: {

@@ -7,15 +7,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
+  box-shadow: rgba(0, 0, 0, 0.2) 2px 2px 2px 0px,
     rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
     rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
   margin: 15px;
   position: relative;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   transition: all 235ms ease-in-out;
   padding: 5px;
-  margin-top: 0;
+  margin-top: 8px;
 }
 .currentTitleBox {
   margin-top: 5px;
@@ -26,7 +26,7 @@
 }
 .currentTitle {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 900;
 }
 .currentImg {
   width: 130px;
@@ -39,44 +39,50 @@
   justify-content: center;
 }
 header {
-  background-color: black;
+  background-color: white;
+  /* color: black; */
   color: #f37423;
   display: flex;
+  font-weight: 400;
   justify-content: space-between;
   align-items: center;
   height: 30px;
 }
 header span {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 400;
   margin-left: 5px;
 }
 .logoutBtn {
   margin: 0;
   border: none;
-  color: #f37423;
+  /* color: #f37423; */
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 400;
   cursor: pointer;
-  background-color: black;
+  background-color: white;
   margin-right: 10px;
-  font-family: 'TmoneyRoundWindExtraBold';
+  /* font-family: 'TmoneyRoundWindExtraBold'; */
+
+  font-family: 'IBM Plex Sans KR', sans-serif;
 }
 .mobaBtn {
-  background-color: #f37423;
-  color: white;
+  /* background-color:black; */
+  /* color: #f37423; */
+  background-color: white;
   margin: 0;
   border: none;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   cursor: pointer;
   height: 33px;
   width: 100px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   margin-right: 30px;
-  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
-  font-family: 'TmoneyRoundWindExtraBold';
+  /* font-family: 'TmoneyRoundWindExtraBold'; */
+  font-family: 'IBM Plex Sans KR', sans-serif;
 }
 .mobaBtn:hover {
   transform: scale(1.05);
@@ -84,18 +90,18 @@ header span {
 .title {
   font-size: 20px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 800;
 }
 img {
-  width: 100px;
-  height: 110px;
-  border-radius: 10px;
+  width: 130px;
+  height: 143px;
+  /* border-radius: 10px; */
 }
 .image__description {
   padding: 5px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex-direction: column;
   flex: 2.7 2.7;
 }
@@ -109,12 +115,12 @@ img {
 
 .image__description p:first-child {
   font-size: 1.6em;
-  font-weight: 600;
+  font-weight: 100;
 }
 
 .image__description p:last-child {
   font-size: 1.7em;
-  font-weight: 600;
+  font-weight: 900;
 }
 .image__addBtn {
   display: flex;
@@ -123,19 +129,22 @@ img {
   flex: 1 1;
 }
 #addBtn {
-  background-color: #f37423;
-  color: white;
+  background-color: black;
+  /* color: white; */
+  /* color: #f37423; */
+  background-color: white;
   width: 60px;
   height: 40px;
   margin: 0;
   border: none;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   cursor: pointer;
-  font-size: 18px;
-  font-weight: 600;
-  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
-  font-family: 'TmoneyRoundWindExtraBold';
+  /* font-family: 'TmoneyRoundWindExtraBold'; */
+  font-family: 'IBM Plex Sans KR', sans-serif;
 }
 #addBtn:hover {
   transform: scale(1.06);
@@ -161,43 +170,58 @@ img {
   padding: 6px;
 }
 .myBasket__title {
-  font-weight: 600;
-  font-size: 20px;
-  margin-left: 35px;
+  font-weight: 500;
+  font-size: 23px;
+  margin-left: 28px;
 }
 
 .container {
-  width: 120px;
-  height: 180px;
+  width: 156px;
+  height: 224px;
   padding: 7px;
   margin: 7px;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   /* overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; */
-  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
   display: flex;
   flex-direction: column;
   position: relative;
 }
+/* .container:hover ~ #hoverItem {
+  visibility: visible;
+  opacity: 0.8;
+  z-index: 20;
+} */
 .container:hover {
-  transform: scale(1.1);
+  transform: scale(1.06);
 }
+#hoverItem {
+  opacity: 0.2;
+  /* visibility: hidden; */
+}
+
 .product__name p {
   width: 110px;
+  font-size: 10px;
+  font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .product__price {
-  font-size: 16px;
+  font-size: 13px;
+  font-weight: 600;
 }
 .delBtn {
   position: absolute;
-  left: 90px;
   border: none;
+  right: 8px;
   cursor: pointer;
+  font-size: 20px;
+  color: black;
   background-color: rgba(0, 0, 0, 0);
 }
 .container p {
@@ -212,10 +236,10 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
   margin: 10px;
   position: relative;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   transition: all 235ms ease-in-out;
   padding: 5px;
   margin-top: 0;
@@ -232,17 +256,18 @@ img {
 }
 
 #inputBoxBtn {
-  background-color: #f37423;
+  /* background-color: #f37423; */
+
   color: white;
   width: 60px;
   height: 40px;
   margin: 0;
   border: none;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   cursor: pointer;
   font-size: 18px;
-  font-weight: 600;
-  box-shadow: 6px 6px 8px 0px rgba(217, 217, 217, 1);
+  font-weight: 500;
+  box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
 }
 .input {
@@ -251,7 +276,8 @@ img {
   -o-appearance: none;
   appearance: none;
   border: 0;
-  border-bottom: 2px solid #f37423;
+  border-bottom: 2px solid;
+	 /* #f37423; */
   width: 300px;
 }
 .input:focus {
@@ -263,8 +289,9 @@ img {
   -o-appearance: none;
   appearance: none;
   border: 0;
-  border-bottom: 2px solid #f37423;
-  width: 180px;
+  border-bottom: 2px solid black;
+  /* #f37423; */
+  width: 240px;
   margin-top: 15px;
 }
 .inputUrl:focus {
@@ -272,7 +299,7 @@ img {
 }
 .input__box {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 10px;
   margin-left: 10px;
 }
@@ -325,4 +352,8 @@ img {
 
 #changeImgUrl {
   margin-left: 10px;
+}
+
+.newImg__title {
+  font-weight: 500;
 }
