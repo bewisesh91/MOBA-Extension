@@ -16,6 +16,7 @@
   transition: all 235ms ease-in-out;
   padding: 5px;
   margin-top: 8px;
+  background-color: white;
 }
 .currentTitleBox {
   margin-top: 5px;
@@ -39,28 +40,33 @@
   justify-content: center;
 }
 header {
-  background-color: white;
-  /* color: black; */
+  background-color: #fbfbfb;
   color: #f37423;
   display: flex;
-  font-weight: 400;
+  font-weight: 700;
   justify-content: space-between;
   align-items: center;
-  height: 30px;
+  height: 40px;
+  padding-top: 5px;
 }
 header span {
-  font-size: 20px;
-  font-weight: 400;
-  margin-left: 5px;
+  font-size: 28px;
+  font-weight: 700;
+  margin-left: 15px;
+}
+
+body {
+  background-color: #fbfbfb;
 }
 .logoutBtn {
   margin: 0;
+	padding-top: 5px;
   border: none;
   /* color: #f37423; */
   font-size: 15px;
   font-weight: 400;
   cursor: pointer;
-  background-color: white;
+  background-color: #fbfbfb;
   margin-right: 10px;
   /* font-family: 'TmoneyRoundWindExtraBold'; */
 
@@ -189,9 +195,11 @@ img {
   display: flex;
   flex-direction: column;
   position: relative;
+  background-color: white;
+  border: 1px solid #f0f0f0;
 }
 /* .container:hover ~ #hoverItem {
-  visibility: visible;
+  visibility: visible;xr
   opacity: 0.8;
   z-index: 20;
 } */
@@ -277,7 +285,7 @@ img {
   appearance: none;
   border: 0;
   border-bottom: 2px solid;
-	 /* #f37423; */
+  /* #f37423; */
   width: 300px;
 }
 .input:focus {

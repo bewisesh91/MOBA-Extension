@@ -6,6 +6,7 @@ import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { ThreeDots } from 'react-loader-spinner';
 // import '@fortawesome/fontawesome-free/js/all.js';
 import { FiPlusCircle } from 'react-icons/fi';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
 
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -505,7 +506,7 @@ const Popup = React.memo(function Popup() {
       <header>
         <span>MOBA</span>
         <button className="logoutBtn" onClick={logOut}>
-          로그아웃
+          <RiLogoutBoxRLine size={28} />
         </button>
       </header>
       <div style={{ display: 'none' }}>
