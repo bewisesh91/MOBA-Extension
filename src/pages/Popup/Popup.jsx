@@ -4,7 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import { ThreeDots } from 'react-loader-spinner';
-import '@fortawesome/fontawesome-free/js/all.js';
+// import '@fortawesome/fontawesome-free/js/all.js';
 import { FiPlusCircle } from 'react-icons/fi';
 
 const cheerio = require('cheerio');
@@ -22,7 +22,7 @@ const Popup = React.memo(function Popup() {
       const authToken = items.userStatus;
 
       axios
-        .post('http://moba-shop.link:8000/privatebasket/basket', {
+        .post('http://localhost:8000/privatebasket/basket', {
           token: authToken,
         })
         .then((Response) => {
@@ -243,7 +243,7 @@ const Popup = React.memo(function Popup() {
           /** ---------------- S3  start ---------------- */
           // get secure S3 url from our server
           const target =
-            'http://moba-shop.link:8000/s3Url/' +
+            'http://localhost:8000/s3Url/' +
             new_product.img?.split('https://')[1].replaceAll('/', '-');
           const S3url = await fetch(target).then((res) => res.json());
 
@@ -277,7 +277,7 @@ const Popup = React.memo(function Popup() {
             const authToken = items.userStatus;
 
             axios
-              .post('http://moba-shop.link:8000/privatebasket', {
+              .post('http://localhost:8000/privatebasket', {
                 token: authToken,
                 products: [new_product],
               })
@@ -319,7 +319,7 @@ const Popup = React.memo(function Popup() {
   }
 
   function moveToMain() {
-    chrome.tabs.create({ url: 'moba-shop.link:3000/mainpage' });
+    chrome.tabs.create({ url: 'localhost:3000/mainpage' });
   }
   function logOut() {
     chrome.storage.local.set({
@@ -333,7 +333,7 @@ const Popup = React.memo(function Popup() {
     chrome.storage.local.get(['userStatus'], function (items) {
       const authToken = items.userStatus;
       axios
-        .delete('http://moba-shop.link:8000/privatebasket/product', {
+        .delete('http://localhost:8000/privatebasket/product', {
           data: { token: authToken, products: product, shop_url: shop_url },
         })
         .then((response) => {
@@ -475,7 +475,7 @@ const Popup = React.memo(function Popup() {
       {isSupported ? (
         <>
           <div className="currentTitleBox">
-            <span className="currentTitle">상품정보 입력</span>
+            <span className="currentTitle">상품정보 입력란</span>
           </div>
           <div className="conditional__container">
             <div className="conditional__formBox">
@@ -485,46 +485,54 @@ const Popup = React.memo(function Popup() {
                 onSubmit={onReset}
               >
                 <div className="input__box">
-                  <label htmlFor="productName">상품명</label>
+                  <label style={{ fontWeight: '600' }} htmlFor="productName">
+                    상품명&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </label>
                   <input
                     autoFocus
                     className="input"
                     name="productName"
                     type="text"
-                    placeholder="상품명을 입력해주세요"
+                    placeholder="상품명을 입력해 주세요"
                     onChange={onChange}
                     value={inputs.productName}
                   ></input>
                 </div>
                 <div className="input__box">
-                  <label htmlFor="imgUrl">이미지 주소</label>
+                  <label style={{ fontWeight: '600' }} htmlFor="imgUrl">
+                    이미지 주소
+                  </label>
                   <input
                     className="input"
                     name="url"
                     type="url"
-                    placeholder="이미지 오른쪽클릭후 이미지 주소 복사"
+                    placeholder="이미지 오른쪽 클릭 후 이미지 주소를 복사해 주세요"
                     onChange={onChange}
                     value={inputs.url}
                   ></input>
                 </div>
                 <div className="input__box">
-                  <label htmlFor="productPrice">상품 가격</label>
+                  <label style={{ fontWeight: '600' }} htmlFor="productPrice">
+                    상품 가격&nbsp;&nbsp;&nbsp;&nbsp;
+                  </label>
                   <input
                     className="input"
                     name="price"
                     type="text"
-                    placeholder="상품 가격을 입력해주세요"
+                    placeholder="상품 가격을 입력해 주세요"
                     onChange={onChange}
                     value={inputs.price}
                   ></input>
                 </div>
                 <div className="input__box">
-                  <label htmlFor="shopName">쇼핑몰 이름</label>
+                  <label style={{ fontWeight: '600' }} htmlFor="shopName">
+                    쇼핑몰 이름
+                  </label>
                   <input
                     className="input"
                     name="shopName"
                     type="text"
-                    placeholder="쇼핑몰 이름을 입력해주세요"
+                    placeholder="쇼핑몰 이름을 입력해 주세요"
                     onChange={onChange}
                     value={inputs.shopName}
                   />
@@ -532,7 +540,12 @@ const Popup = React.memo(function Popup() {
               </form>
             </div>
             <div className="image__addBtn">
-              <button form="addMyCart" id="inputBoxBtn" type="submit">
+              <button
+                style={{ color: 'white', backgroundColor: 'black' }}
+                form="addMyCart"
+                id="inputBoxBtn"
+                type="submit"
+              >
                 담기
               </button>
             </div>
@@ -543,9 +556,9 @@ const Popup = React.memo(function Popup() {
       )}
 
       <div className="currentBox">
-        <div className="currentTitleBox">
+        {/* <div className="currentTitleBox">
           <span className="currentTitle">지금 보고있는 상품</span>
-        </div>
+        </div> */}
         {isLoading ? (
           <div className="loading__oval">
             <ThreeDots
@@ -567,8 +580,8 @@ const Popup = React.memo(function Popup() {
                 <img className="currentImg" src={curProducts?.img} alt="img" />
                 <FiPlusCircle
                   className="addProductIcon"
-                  color="orange"
-                  size="50"
+                  color="f37423"
+                  size="40"
                 />
               </div>
               <div className="addProductText"> 다른 이미지로 바꾸기</div>
@@ -576,12 +589,44 @@ const Popup = React.memo(function Popup() {
             {!needUrlInput ? (
               <>
                 <div className="image__description">
-                  <p>{curProducts?.shop_name}</p>
-                  <p>{curProducts?.product_name}</p>
-                  <p>{curProducts?.sale_price} 원</p>
+                  <p
+                    style={{
+                      // backgroundColor: 'black',
+                      // color: 'white',
+                      fontSize: '15px',
+                      fontWeight: 700,
+                      // padding: '1px 10px',
+                    }}
+                  >
+                    {curProducts?.shop_name?.[0] +
+                      curProducts?.shop_name?.slice(1).toLowerCase()}
+                  </p>
+                  <p
+                    style={{
+                      width: '250px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      fontSize: '16px',
+                      fontWeight: 400,
+                    }}
+                  >
+                    {curProducts?.product_name}
+                  </p>
+                  <p>
+                    {curProducts?.sale_price
+                      ?.toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                    원
+                  </p>
                 </div>
                 <div className="image__addBtn">
-                  <button onClick={handleClick} type="submit" id="addBtn">
+                  <button
+                    style={{ color: 'white', backgroundColor: 'black' }}
+                    onClick={handleClick}
+                    type="submit"
+                    id="addBtn"
+                  >
                     담기
                   </button>
                 </div>
@@ -591,7 +636,7 @@ const Popup = React.memo(function Popup() {
                 <div className="image__description">
                   <form onSubmit={handleClick} id="changeImgUrl">
                     <label className="newImg__title" htmlFor="imgUrl">
-                      새로운 이미지로 저장
+                      다른 이미지로 저장
                     </label>
                     <input
                       className="inputUrl"
@@ -604,7 +649,12 @@ const Popup = React.memo(function Popup() {
                   </form>
                 </div>
                 <div className="image__addBtn">
-                  <button form="changeImgUrl" type="submit" id="addBtn">
+                  <button
+                    style={{ color: 'white', backgroundColor: 'black' }}
+                    form="changeImgUrl"
+                    type="submit"
+                    id="addBtn"
+                  >
                     담기
                   </button>
                 </div>
@@ -615,29 +665,98 @@ const Popup = React.memo(function Popup() {
       </div>
       <div className="myBasket__container">
         <div className="myBasket__title__box">
-          <span className="myBasket__title">내 장바구니</span>
-          <button className="mobaBtn" onClick={moveToMain}>
-            모바로 이동
+          <span className="myBasket__title">장바구니</span>
+          <button
+            style={{ color: 'white', backgroundColor: 'black' }}
+            className="mobaBtn"
+            onClick={moveToMain}
+          >
+            MOBA로 이동
           </button>
         </div>
         <div className="myBasket">
           {products?.map((item, index) => (
             <div key={index} className="container">
-              <img src={item.img} alt="img" />
-              <p>
-                <strong>{item.shop_name}</strong>
-              </p>
-              <div className="product__name">
-                <p>{item.product_name}</p>
-              </div>
-              <p className="product__price">
-                <strong>{item.sale_price}원</strong>
-              </p>
+              <span
+                style={{
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  color: 'black',
+                }}
+              >
+                {item.shop_name[0].toUpperCase() +
+                  item.shop_name.slice(1).toLowerCase()}
+              </span>
+              <img
+                style={{
+                  zIndex: 10,
+                }}
+                src={item.removedBgImg}
+                alt="img"
+              />
+              <span className="productInfo">
+                <div className="product__name">
+                  <p
+                    style={{
+                      width: '125px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      fontSize: '13px',
+                    }}
+                  >
+                    {item.product_name}
+                  </p>
+                </div>
+                <div className="product__price">
+                  {item.price === item.sale_price ? (
+                    <span style={{ fontSize: '15px', fontWeight: '900' }}>
+                      {item.price
+                        .toString()
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                      원
+                    </span>
+                  ) : (
+                    <>
+                      <span
+                        style={{
+                          fontSize: '10px',
+                          fontWeight: '900',
+                          color: 'grey',
+                          textDecoration: 'line-through',
+                        }}
+                      >
+                        {item.price
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        원
+                      </span>
+                      <span
+                        style={{
+                          marginLeft: '5px',
+                          fontSize: '13px',
+                          fontWeight: '800',
+                          color: '#a02226',
+                          width: '125px',
+                        }}
+                      >
+                        {item.sale_price
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                        원
+                      </span>
+                    </>
+                  )}
+                  {/* <strong>{item.sale_price}원</strong> */}
+                </div>
+              </span>
               <button
                 className="delBtn"
+                id="hoverItem"
                 onClick={() => deleteItem(products, item.shop_url)}
               >
-                <i className="fa-solid fa-xmark fa-2xl"></i>
+                x
+                {/* <i id="hoverItem"className="fa-solid fa-xmark fa-2xl"></i> */}
               </button>
             </div>
           ))}
