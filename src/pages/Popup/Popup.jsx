@@ -160,7 +160,7 @@ const Popup = React.memo(function Popup() {
         '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
       ).text();
     }
-
+    console.log(category);
     product_name = $(
       '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > span > em'
     ).text();
@@ -189,13 +189,13 @@ const Popup = React.memo(function Popup() {
     img_url = $("meta[property='og:image']").attr('content');
 
     const new_product = {
-      category: category,
       product_name: product_name,
       price: Number(price),
       sale_price: sale_price,
       shop_name: shop_name,
       shop_url: shop_url,
       img: img_url,
+      category: category,
     };
     return new_product;
   }
