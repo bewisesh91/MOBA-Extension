@@ -157,9 +157,7 @@ const Popup = React.memo(function Popup() {
     ) {
       category = '상의';
     } else {
-      category = $(
-        '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
-      ).text();
+      category = '상의';
     }
     console.log(category);
     product_name = $(
