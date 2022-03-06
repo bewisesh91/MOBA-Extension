@@ -156,6 +156,12 @@ const Popup = React.memo(function Popup() {
       ).text() === '원피스'
     ) {
       category = '상의';
+    } else if (
+      $(
+        '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
+      ).text() === '신발'
+    ) {
+      category = '신발';
     } else {
       category = '상의';
     }
