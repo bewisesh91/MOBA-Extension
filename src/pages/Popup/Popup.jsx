@@ -169,22 +169,24 @@ const Popup = React.memo(function Popup() {
     product_name = $(
       '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > span > em'
     ).text();
-    price = $('#goods_price').text().trim();
+    price = $('#goods_price')?.toString().text().trim();
 
     // price parsing - e.g. 110,000원 -> 110000
     price = Number(
       price
+        ?.toString()
         .slice(0, -1)
         ?.split(',')
         .reduce((a, b) => a + b)
     );
 
-    sale_price = $(
-      '#sPrice > ul > li > span.txt_price_member.m_list_price'
-    ).text();
+    sale_price = $('#sPrice > ul > li > span.txt_price_member.m_list_price')
+      ?.toString()
+      ?.text();
 
     sale_price = Number(
       sale_price
+        ?.toString()
         .slice(0, -1)
         ?.split(',')
         .reduce((a, b) => a + b)
@@ -196,7 +198,7 @@ const Popup = React.memo(function Popup() {
     const new_product = {
       product_name: product_name,
       price: Number(price),
-      sale_price: sale_price,
+      sale_price: Number(sale_price),
       shop_name: shop_name,
       shop_url: shop_url,
       img: img_url,
@@ -543,7 +545,7 @@ const Popup = React.memo(function Popup() {
               >
                 <div className="input__box">
                   <label style={{ fontWeight: '600' }} htmlFor="productName">
-                    상품명&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    상품명&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </label>
                   <input
                     autoFocus
@@ -555,28 +557,21 @@ const Popup = React.memo(function Popup() {
                     value={inputs.productName}
                   ></input>
                 </div>
-                {/* <div className="input__box">
-                  <label htmlFor="category">상품 카테고리</label>
-                  <input
-                    autoFocus
-                    className="input"
-                    name="category"
-                    type="text"
-                    placeholder="상품 카테고리을 입력해주세요"
-                    onChange={onChange}
-                    value={inputs.category}
-                  ></input>
-                </div> */}
                 <div className="input__box">
                   <label htmlFor="category">상품 카테고리</label>
                   <select
+                    id="selectBox"
                     autoFocus
                     className="input"
                     name="category"
                     onChange={onChange}
                     value={inputs.category}
                   >
-                    <option value=""> 상품 카테고리를 선택해주세요 </option>
+                    <option value="">
+                      {' '}
+                      상품 카테고리를
+                      선택해주세요&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼{' '}
+                    </option>
                     <option value="아우터">아우터</option>
                     <option value="상의">상의</option>
                     <option value="하의">하의</option>
@@ -586,7 +581,7 @@ const Popup = React.memo(function Popup() {
 
                 <div className="input__box">
                   <label style={{ fontWeight: '600' }} htmlFor="imgUrl">
-                    이미지 주소
+                    이미지 주소&nbsp;&nbsp;&nbsp;&nbsp;
                   </label>
                   <input
                     className="input"
@@ -599,7 +594,7 @@ const Popup = React.memo(function Popup() {
                 </div>
                 <div className="input__box">
                   <label style={{ fontWeight: '600' }} htmlFor="productPrice">
-                    상품 가격&nbsp;&nbsp;&nbsp;&nbsp;
+                    상품 가격&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </label>
                   <input
                     className="input"
@@ -612,7 +607,7 @@ const Popup = React.memo(function Popup() {
                 </div>
                 <div className="input__box">
                   <label style={{ fontWeight: '600' }} htmlFor="shopName">
-                    쇼핑몰 이름
+                    쇼핑몰 이름&nbsp;&nbsp;&nbsp;&nbsp;
                   </label>
                   <input
                     className="input"
@@ -677,11 +672,8 @@ const Popup = React.memo(function Popup() {
                 <div className="image__description">
                   <p
                     style={{
-                      // backgroundColor: 'black',
-                      // color: 'white',
                       fontSize: '15px',
                       fontWeight: 700,
-                      // padding: '1px 10px',
                     }}
                   >
                     {curProducts?.shop_name?.[0] +
@@ -770,8 +762,8 @@ const Popup = React.memo(function Popup() {
                   color: 'black',
                 }}
               >
-                {item.shop_name[0].toUpperCase() +
-                  item.shop_name.slice(1).toLowerCase()}
+                {item.shop_name?.[0].toUpperCase() +
+                  item.shop_name?.slice(1).toLowerCase()}
               </span>
               <img
                 style={{
@@ -798,7 +790,7 @@ const Popup = React.memo(function Popup() {
                   {item.price === item.sale_price ? (
                     <span style={{ fontSize: '15px', fontWeight: '900' }}>
                       {item.price
-                        .toString()
+                        ?.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                       원
                     </span>
@@ -813,27 +805,26 @@ const Popup = React.memo(function Popup() {
                         }}
                       >
                         {item.price
-                          .toString()
+                          ?.toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         원
                       </span>
                       <span
                         style={{
                           marginLeft: '5px',
-                          fontSize: '13px',
+                          fontSize: '15px',
                           fontWeight: '800',
                           color: '#a02226',
                           width: '125px',
                         }}
                       >
                         {item.sale_price
-                          .toString()
+                          ?.toString()
                           .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         원
                       </span>
                     </>
                   )}
-                  {/* <strong>{item.sale_price}원</strong> */}
                 </div>
               </span>
               <button
