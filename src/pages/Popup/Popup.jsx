@@ -169,7 +169,7 @@ const Popup = React.memo(function Popup() {
     product_name = $(
       '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > span > em'
     ).text();
-    price = $('#goods_price')?.toString().text().trim();
+    price = $('#goods_price')?.text().trim();
 
     // price parsing - e.g. 110,000원 -> 110000
     price = Number(
@@ -181,8 +181,8 @@ const Popup = React.memo(function Popup() {
     );
 
     sale_price = $('#sPrice > ul > li > span.txt_price_member.m_list_price')
-      ?.toString()
-      ?.text();
+      ?.text()
+      .trim();
 
     sale_price = Number(
       sale_price
@@ -681,7 +681,6 @@ const Popup = React.memo(function Popup() {
                   </p>
                   <p
                     style={{
-                      width: '250px',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
@@ -787,12 +786,13 @@ const Popup = React.memo(function Popup() {
                   </p>
                 </div>
                 <div className="product__price">
-                  {item.price === item.sale_price ? (
+                  {item.price && item.price === item.sale_price ? (
                     <span style={{ fontSize: '15px', fontWeight: '900' }}>
                       {item.price
                         ?.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                       원
+                      {/* {console.log('item.price', item.price, typeof item.price)} */}
                     </span>
                   ) : (
                     <>
