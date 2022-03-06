@@ -12,7 +12,6 @@
     rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
   margin: 15px;
   position: relative;
-  /* border-radius: 10px; */
   transition: all 235ms ease-in-out;
   padding: 5px;
   margin-top: 8px;
@@ -60,7 +59,7 @@ body {
 }
 .logoutBtn {
   margin: 0;
-	padding-top: 5px;
+  padding-top: 5px;
   border: none;
   /* color: #f37423; */
   font-size: 15px;
@@ -73,21 +72,17 @@ body {
   font-family: 'IBM Plex Sans KR', sans-serif;
 }
 .mobaBtn {
-  /* background-color:black; */
-  /* color: #f37423; */
   background-color: white;
   margin: 0;
   border: none;
-  /* border-radius: 5px; */
   cursor: pointer;
   height: 33px;
   width: 100px;
   font-size: 15px;
   font-weight: 500;
-  margin-right: 30px;
+  margin-right: 15px;
   box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
-  /* font-family: 'TmoneyRoundWindExtraBold'; */
   font-family: 'IBM Plex Sans KR', sans-serif;
 }
 .mobaBtn:hover {
@@ -101,7 +96,6 @@ body {
 img {
   width: 130px;
   height: 143px;
-  /* border-radius: 10px; */
 }
 .image__description {
   padding: 5px;
@@ -129,27 +123,25 @@ img {
   font-weight: 900;
 }
 .image__addBtn {
+  margin-left: 0px;
+  margin-right: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex: 1 1;
+  margin-left: 15px;
 }
 #addBtn {
   background-color: black;
-  /* color: white; */
-  /* color: #f37423; */
   background-color: white;
   width: 60px;
   height: 40px;
   margin: 0;
   border: none;
-  /* border-radius: 5px; */
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
   box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
-  /* font-family: 'TmoneyRoundWindExtraBold'; */
   font-family: 'IBM Plex Sans KR', sans-serif;
 }
 #addBtn:hover {
@@ -163,14 +155,15 @@ img {
 }
 .myBasket__title__box {
   display: flex;
+  margin: 10px 0;
   width: 100%;
   justify-content: space-between;
   align-items: center;
 }
 .myBasket {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex-wrap: wrap;
   overflow: auto;
   padding: 6px;
@@ -178,18 +171,14 @@ img {
 .myBasket__title {
   font-weight: 500;
   font-size: 23px;
-  margin-left: 28px;
+  margin-left: 23px;
 }
 
 .container {
-  width: 156px;
-  height: 224px;
+  width: 166px;
+  height: 230px;
   padding: 7px;
-  margin: 7px;
-  /* border-radius: 10px; */
-  /* overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; */
+  margin: 5px;
   box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
   transition: all 235ms ease-in-out;
   display: flex;
@@ -198,17 +187,11 @@ img {
   background-color: white;
   border: 1px solid #f0f0f0;
 }
-/* .container:hover ~ #hoverItem {
-  visibility: visible;xr
-  opacity: 0.8;
-  z-index: 20;
-} */
 .container:hover {
   transform: scale(1.06);
 }
 #hoverItem {
   opacity: 0.2;
-  /* visibility: hidden; */
 }
 
 .product__name p {
@@ -241,20 +224,21 @@ img {
 }
 
 .conditional__container {
+  size: 200px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
-  margin: 10px;
+  margin: 5px;
   position: relative;
   /* border-radius: 10px; */
   transition: all 235ms ease-in-out;
-  padding: 5px;
+  padding: 5px 29px 5px 10px;
   margin-top: 0;
 }
 .conditional__formBox {
   display: flex;
-  flex: 3.5 3.5;
+  /* flex: 3.5 3.5; */
   justify-content: center;
 }
 
@@ -264,14 +248,11 @@ img {
 }
 
 #inputBoxBtn {
-  /* background-color: #f37423; */
-
   color: white;
   width: 60px;
   height: 40px;
   margin: 0;
   border: none;
-  /* border-radius: 5px; */
   cursor: pointer;
   font-size: 18px;
   font-weight: 500;
@@ -285,7 +266,6 @@ img {
   appearance: none;
   border: 0;
   border-bottom: 2px solid;
-  /* #f37423; */
   width: 300px;
 }
 .input:focus {
@@ -298,7 +278,6 @@ img {
   appearance: none;
   border: 0;
   border-bottom: 2px solid black;
-  /* #f37423; */
   width: 240px;
   margin-top: 15px;
 }
@@ -345,8 +324,6 @@ img {
 
 .productBox {
   color: var(--text-color);
-  /* font-weight: 400;
-  font-size: 0.9rem; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -364,4 +341,8 @@ img {
 
 .newImg__title {
   font-weight: 500;
+}
+
+#selectBox:hover {
+  cursor: pointer;
 }
