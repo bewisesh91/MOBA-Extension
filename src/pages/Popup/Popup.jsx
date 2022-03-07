@@ -15,6 +15,7 @@ const Popup = React.memo(function Popup() {
   const [products, setProducts] = useState([]);
   const [curProducts, setCurProducts] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
   const [needUrlInput, setNeedUrlInput] = useState(false);
 
@@ -43,6 +44,7 @@ const Popup = React.memo(function Popup() {
         new_product = await parse_product(shopUrl);
         setCurProducts(new_product);
         setIsLoading(false);
+        setIsReady(true);
       }
     );
     async function parse_product(url) {
@@ -349,6 +351,7 @@ const Popup = React.memo(function Popup() {
                   draggable: true,
                   progress: undefined,
                 });
+                // setIsReady(false);
                 setProducts([new_product, ...products]);
               })
               .catch((Error) => {
@@ -409,6 +412,7 @@ const Popup = React.memo(function Popup() {
             progress: undefined,
           });
           //reloading 하지 않고(setTimeout 쓰지 않고) useState활용하여 다시 그려줌
+          // setIsReady(false);
           setProducts(
             products?.filter((product) => product.shop_url !== shop_url)
           );
@@ -545,7 +549,7 @@ const Popup = React.memo(function Popup() {
               >
                 <div className="input__box">
                   <label style={{ fontWeight: '600' }} htmlFor="productName">
-                    상품명&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    상품명&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </label>
                   <input
                     autoFocus
@@ -570,7 +574,7 @@ const Popup = React.memo(function Popup() {
                     <option value="">
                       {' '}
                       상품 카테고리를
-                      선택해주세요&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼{' '}
+                      선택해주세요&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼{' '}
                     </option>
                     <option value="아우터">아우터</option>
                     <option value="상의">상의</option>
@@ -637,9 +641,6 @@ const Popup = React.memo(function Popup() {
       )}
 
       <div className="currentBox">
-        {/* <div className="currentTitleBox">
-          <span className="currentTitle">지금 보고있는 상품</span>
-        </div> */}
         {isLoading ? (
           <div className="loading__oval">
             <ThreeDots
@@ -667,7 +668,7 @@ const Popup = React.memo(function Popup() {
               </div>
               <div className="addProductText"> 다른 이미지로 바꾸기</div>
             </div>
-            {!needUrlInput ? (
+            {!isSupported && !needUrlInput ? (
               <>
                 <div className="image__description">
                   <p
@@ -676,8 +677,13 @@ const Popup = React.memo(function Popup() {
                       fontWeight: 700,
                     }}
                   >
-                    {curProducts?.shop_name?.[0] +
-                      curProducts?.shop_name?.slice(1).toLowerCase()}
+                    {isReady
+                      ? curProducts?.shop_name?.[0].toString() +
+                        curProducts?.shop_name
+                          ?.slice(1)
+                          .toLowerCase()
+                          .toString()
+                      : ''}
                   </p>
                   <p
                     style={{
@@ -686,6 +692,7 @@ const Popup = React.memo(function Popup() {
                       whiteSpace: 'nowrap',
                       fontSize: '16px',
                       fontWeight: 400,
+                      width: '270px',
                     }}
                   >
                     {curProducts?.product_name}
@@ -792,7 +799,6 @@ const Popup = React.memo(function Popup() {
                         ?.toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                       원
-                      {/* {console.log('item.price', item.price, typeof item.price)} */}
                     </span>
                   ) : (
                     <>
@@ -833,7 +839,6 @@ const Popup = React.memo(function Popup() {
                 onClick={() => deleteItem(products, item.shop_url)}
               >
                 x
-                {/* <i id="hoverItem"className="fa-solid fa-xmark fa-2xl"></i> */}
               </button>
             </div>
           ))}

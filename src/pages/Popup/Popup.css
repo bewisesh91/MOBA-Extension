@@ -233,7 +233,7 @@ img {
   position: relative;
   /* border-radius: 10px; */
   transition: all 235ms ease-in-out;
-  padding: 5px 29px 5px 10px;
+  padding: 5px 15px 5px 10px;
   margin-top: 0;
 }
 .conditional__formBox {
@@ -266,7 +266,7 @@ img {
   appearance: none;
   border: 0;
   border-bottom: 2px solid;
-  width: 300px;
+  width: 310px;
 }
 .input:focus {
   outline: none;
