@@ -162,8 +162,14 @@ const Popup = React.memo(function Popup() {
       ).text() === '신발'
     ) {
       category = '신발';
-    } else {
+    } else if (
+      $(
+        '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
+      ).text() === '상의'
+    ) {
       category = '상의';
+    } else {
+      category = '미지정';
     }
     console.log(category);
     product_name = $(
