@@ -166,7 +166,6 @@ const Popup = React.memo(function Popup() {
     } else {
       category = '상의';
     }
-    console.log(category);
     product_name = $(
       '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > span > em'
     ).text();
@@ -350,7 +349,6 @@ const Popup = React.memo(function Popup() {
                   draggable: true,
                   progress: undefined,
                 });
-                // setIsReady(false);
                 setProducts([new_product, ...products]);
               })
               .catch((Error) => {
@@ -411,7 +409,6 @@ const Popup = React.memo(function Popup() {
             progress: undefined,
           });
           //reloading 하지 않고(setTimeout 쓰지 않고) useState활용하여 다시 그려줌
-          // setIsReady(false);
           setProducts(
             products?.filter((product) => product.shop_url !== shop_url)
           );
@@ -548,11 +545,11 @@ const Popup = React.memo(function Popup() {
               >
                 <div className="input__box">
                   <label style={{ fontWeight: '600' }} htmlFor="productName">
-                    상품명&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    상품명
                   </label>
                   <input
                     autoFocus
-                    className="input"
+                    className="input inputName"
                     name="productName"
                     type="text"
                     placeholder="상품명을 입력해 주세요"
@@ -561,7 +558,7 @@ const Popup = React.memo(function Popup() {
                   ></input>
                 </div>
                 <div className="input__box">
-                  <label htmlFor="category">상품 카테고리</label>
+                  <label htmlFor="category">카테고리</label>
                   <select
                     id="selectBox"
                     autoFocus
@@ -570,11 +567,7 @@ const Popup = React.memo(function Popup() {
                     onChange={onChange}
                     value={inputs.category}
                   >
-                    <option value="">
-                      {' '}
-                      상품 카테고리를
-                      선택해주세요&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼{' '}
-                    </option>
+                    <option value="">카테고리를 선택해주세요 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ▼</option>
                     <option value="아우터">아우터</option>
                     <option value="상의">상의</option>
                     <option value="하의">하의</option>
@@ -584,23 +577,23 @@ const Popup = React.memo(function Popup() {
 
                 <div className="input__box">
                   <label style={{ fontWeight: '600' }} htmlFor="imgUrl">
-                    이미지 주소&nbsp;&nbsp;&nbsp;&nbsp;
+                    이미지 주소
                   </label>
                   <input
-                    className="input"
+                    className="input condiInputUrl"
                     name="url"
                     type="url"
-                    placeholder="이미지 오른쪽 클릭 후 이미지 주소를 복사해 주세요"
+                    placeholder="이미지 주소를 붙여넣어 주세요"
                     onChange={onChange}
                     value={inputs.url}
                   ></input>
                 </div>
                 <div className="input__box">
                   <label style={{ fontWeight: '600' }} htmlFor="productPrice">
-                    상품 가격&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    상품 가격
                   </label>
                   <input
-                    className="input"
+                    className="input inputPrice"
                     name="price"
                     type="text"
                     placeholder="상품 가격을 입력해 주세요"
@@ -608,12 +601,12 @@ const Popup = React.memo(function Popup() {
                     value={inputs.price}
                   ></input>
                 </div>
-                <div className="input__box">
+                <div className="input__box ">
                   <label style={{ fontWeight: '600' }} htmlFor="shopName">
-                    쇼핑몰 이름&nbsp;&nbsp;&nbsp;&nbsp;
+                    쇼핑몰 이름
                   </label>
                   <input
-                    className="input"
+                    className="input inputShopName"
                     name="shopName"
                     type="text"
                     placeholder="쇼핑몰 이름을 입력해 주세요"
@@ -672,7 +665,7 @@ const Popup = React.memo(function Popup() {
                 <div className="image__description">
                   <p
                     style={{
-                      fontSize: '15px',
+                      fontSize: '16px',
                       fontWeight: 700,
                     }}
                   >
@@ -762,8 +755,8 @@ const Popup = React.memo(function Popup() {
             <div key={index} className="container">
               <span
                 style={{
-                  fontSize: '12px',
-                  fontWeight: '700',
+                  fontSize: '15px',
+                  fontWeight: '500',
                   color: 'black',
                 }}
               >
