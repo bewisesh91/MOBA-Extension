@@ -61,14 +61,11 @@ body {
   margin: 0;
   padding-top: 5px;
   border: none;
-  /* color: #f37423; */
   font-size: 15px;
   font-weight: 400;
   cursor: pointer;
   background-color: #fbfbfb;
   margin-right: 10px;
-  /* font-family: 'TmoneyRoundWindExtraBold'; */
-
   font-family: 'IBM Plex Sans KR', sans-serif;
 }
 .mobaBtn {
@@ -98,12 +95,11 @@ img {
   height: 143px;
 }
 .image__description {
-  padding: 5px;
+  padding: 16px;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: column;
-  flex: 2.7 2.7;
 }
 
 .image__description p {
@@ -123,12 +119,10 @@ img {
   font-weight: 900;
 }
 .image__addBtn {
-  margin-left: 0px;
   margin-right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 15px;
 }
 #addBtn {
   background-color: black;
@@ -269,6 +263,9 @@ img {
 .input:focus {
   outline: none;
 }
+.inputName {
+  margin-left: 47px;
+}
 .inputUrl {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -288,11 +285,20 @@ img {
   margin-bottom: 10px;
   margin-left: 10px;
 }
-.input__box label {
-  margin-right: 10px;
+
+.condiInputUrl {
+  margin-left: 18px;
 }
+
+.inputPrice {
+  margin-left: 30px;
+}
+
 .productBox:hover {
   opacity: 0.7;
+}
+.inputShopName {
+  margin-left: 18px;
 }
 
 .productBox:hover > .addProductIcon {
@@ -340,7 +346,9 @@ img {
 .newImg__title {
   font-weight: 500;
 }
-
+#selectBox {
+  margin-left: 35px;
+}
 #selectBox:hover {
   cursor: pointer;
 }
