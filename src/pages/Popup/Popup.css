@@ -231,14 +231,12 @@ img {
   box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
   margin: 5px;
   position: relative;
-  /* border-radius: 10px; */
   transition: all 235ms ease-in-out;
-  padding: 5px 29px 5px 10px;
+  padding: 5px 15px 5px 10px;
   margin-top: 0;
 }
 .conditional__formBox {
   display: flex;
-  /* flex: 3.5 3.5; */
   justify-content: center;
 }
 
@@ -266,7 +264,7 @@ img {
   appearance: none;
   border: 0;
   border-bottom: 2px solid;
-  width: 300px;
+  width: 310px;
 }
 .input:focus {
   outline: none;
