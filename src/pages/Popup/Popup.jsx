@@ -384,7 +384,7 @@ const Popup = React.memo(function Popup() {
   }
 
   function moveToMain() {
-    chrome.tabs.create({ url: 'moba-shop.link:3000/mainpage' });
+    chrome.tabs.create({ url: 'https://moba-shop.link/mainpage' });
   }
   function logOut() {
     chrome.storage.local.set({

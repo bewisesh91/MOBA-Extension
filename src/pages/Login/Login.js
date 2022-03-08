@@ -36,5 +36,5 @@ document.querySelector('.login__form').addEventListener('submit', (e) => {
 
 document.getElementById('register').addEventListener('submit', (e) => {
   e.preventDefault();
-  chrome.tabs.create({ url: 'moba-shop.link:3000/register' });
+  chrome.tabs.create({ url: 'https://moba-shop.link/register' });
 });
