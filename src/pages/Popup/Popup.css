@@ -97,9 +97,11 @@ img {
 .image__description {
   padding: 16px;
   display: flex;
+  flex: 3.5;
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: column;
+  width: 230px;
 }
 
 .image__description p {
@@ -121,6 +123,7 @@ img {
 .image__addBtn {
   margin-right: 10px;
   display: flex;
+  flex: 1;
   justify-content: center;
   align-items: center;
 }
@@ -339,9 +342,9 @@ img {
   margin-bottom: 15px;
 }
 
-#changeImgUrl {
+/* #changeImgUrl {
   margin-left: 10px;
-}
+} */
 
 .newImg__title {
   font-weight: 500;
@@ -351,4 +354,16 @@ img {
 }
 #selectBox:hover {
   cursor: pointer;
+}
+#inputBoxBtn2 {
+  color: white;
+  width: 60px;
+  height: 40px;
+  margin-left: 18px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: 2px 2px 2px 0px rgba(217, 217, 217, 1);
+  transition: all 235ms ease-in-out;
 }

@@ -23,7 +23,7 @@ const Popup = React.memo(function Popup() {
       const authToken = items.userStatus;
 
       axios
-        .post('http://moba-shop.link:8000/privatebasket/basket', {
+        .post('https://moba-shop.net/privatebasket/basket', {
           token: authToken,
         })
         .then((Response) => {
@@ -55,21 +55,49 @@ const Popup = React.memo(function Popup() {
       if (
         [
           'www.wconcept.co.kr',
+          'www.musinsa.com',
           'store.musinsa.com',
-          'www.brandi.co.kr',
+          // 'www.brandi.co.kr',
         ].includes(cur_shop)
       ) {
         await axios.get(url).then((dataa) => {
           const html = dataa.data;
           switch (cur_shop) {
             case 'www.wconcept.co.kr':
-              new_product = w_concept(html, url);
+              if (split_url[3] === 'Product') {
+                new_product = w_concept(html, url);
+              } else {
+                setIsSupported(true);
+                const currBox = document.querySelector('.currentBox');
+                if (currBox) {
+                  currBox.style.display = 'none';
+                }
+                const imageBox = document.querySelector('#imageBox');
+                if (imageBox) {
+                  imageBox.style.display = 'none';
+                }
+              }
               break;
             case 'store.musinsa.com':
               new_product = musinsa(html, url);
               break;
+            case 'www.musinsa.com':
+              new_product = musinsa(html, url);
+              break;
             case 'www.brandi.co.kr':
-              new_product = brandi(html, url);
+              if (split_url[3] === 'products') {
+                new_product = brandi(html, url);
+              } else {
+                setIsSupported(true);
+                const currBox = document.querySelector('.currentBox');
+                if (currBox) {
+                  currBox.style.display = 'none';
+                }
+                const imageBox = document.querySelector('#imageBox');
+                if (imageBox) {
+                  imageBox.style.display = 'none';
+                }
+              }
               break;
             default:
               break;
@@ -95,18 +123,27 @@ const Popup = React.memo(function Popup() {
     let shop_name, shop_url, img_url, product_name, price, sale_price, category;
 
     const $ = cheerio.load(html); // html load
-    if ($('#cateDepth3 > button').text() === '아우터') {
-      category = '아우터';
+    if (
+      $('#cateDepth3 > button').text() === '아우터' ||
+      $('#cateDepth3 > button').text() === '원피스' ||
+      $('#cateDepth3 > button').text() === '블라우스/셔츠' ||
+      $('#cateDepth3 > button').text() === '티셔츠' ||
+      $('#cateDepth3 > button').text() === '니트웨어' ||
+      $('#cateDepth3 > button').text() === '티셔츠/후드' ||
+      $('#cateDepth3 > button').text() === '셔츠'
+    ) {
+      category = '상의';
     } else if (
       $('#cateDepth3 > button').text() === '데님' ||
-      $('#cateDepth3 > button').text() === '팬츠'
+      $('#cateDepth3 > button').text() === '팬츠' ||
+      $('#cateDepth3 > button').text() === '스커트'
     ) {
       category = '하의';
     } else if (
       $('#prdLocaiton > li:nth-child(3) > button').text() === 'SHOES'
     ) {
       category = '신발';
-    } else category = '상의';
+    } else category = '미지정';
 
     product_name = $("meta[property='og:description']").attr('content');
     price = $("meta[property='eg:originalPrice']").attr('content');
@@ -167,6 +204,12 @@ const Popup = React.memo(function Popup() {
       $(
         '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
       ).text() === '상의'
+    ) {
+      category = '상의';
+    } else if (
+      $(
+        '#page_product_detail > div.right_area.page_detail_product > div.right_contents.section_product_summary > div.product_info > p > a:nth-child(1)'
+      ).text() === '아우터'
     ) {
       category = '상의';
     } else {
@@ -307,7 +350,7 @@ const Popup = React.memo(function Popup() {
           // get secure S3 url from our server
 
           const target =
-            'http://moba-shop.link:8000/s3Url/' +
+            'https://moba-shop.net/s3Url/' +
             new_product.img?.split('https://')[1].replaceAll('/', '-');
           const S3url = await fetch(target).then((res) => res.json());
 
@@ -341,7 +384,7 @@ const Popup = React.memo(function Popup() {
             const authToken = items.userStatus;
 
             axios
-              .post('http://moba-shop.link:8000/privatebasket', {
+              .post('https://moba-shop.net/privatebasket', {
                 token: authToken,
                 products: [new_product],
               })
@@ -384,7 +427,7 @@ const Popup = React.memo(function Popup() {
   }
 
   function moveToMain() {
-    chrome.tabs.create({ url: 'https://moba-shop.link/mainpage' });
+    chrome.tabs.create({ url: 'https://moba-shop.net/mainpage' });
   }
   function logOut() {
     chrome.storage.local.set({
@@ -398,7 +441,7 @@ const Popup = React.memo(function Popup() {
     chrome.storage.local.get(['userStatus'], function (items) {
       const authToken = items.userStatus;
       axios
-        .delete('http://moba-shop.link:8000/privatebasket/product', {
+        .delete('https://moba-shop.net/privatebasket/product', {
           data: { token: authToken, products: product, shop_url: shop_url },
         })
         .then((response) => {
@@ -573,8 +616,11 @@ const Popup = React.memo(function Popup() {
                     onChange={onChange}
                     value={inputs.category}
                   >
-                    <option value="">카테고리를 선택해주세요 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ▼</option>
-                    <option value="아우터">아우터</option>
+                    <option value="">
+                      카테고리를 선택해주세요
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      ▼
+                    </option>
                     <option value="상의">상의</option>
                     <option value="하의">하의</option>
                     <option value="신발">신발</option>
@@ -626,7 +672,7 @@ const Popup = React.memo(function Popup() {
               <button
                 style={{ color: 'white', backgroundColor: 'black' }}
                 form="addMyCart"
-                id="inputBoxBtn"
+                id="inputBoxBtn2"
                 type="submit"
               >
                 담기
@@ -691,6 +737,7 @@ const Popup = React.memo(function Popup() {
                       fontSize: '16px',
                       fontWeight: 400,
                       width: '270px',
+                      textAlign: 'left',
                     }}
                   >
                     {curProducts?.product_name}
