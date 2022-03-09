@@ -14,7 +14,7 @@ document.querySelector('.login__form').addEventListener('submit', (e) => {
 
   // eslint-disable-next-line no-undef
   $.ajax({
-    url: 'http://moba-shop.link:8000/api/users/login',
+    url: 'https://moba-shop.net/api/users/login',
     type: 'POST',
     data: {
       username: id,
@@ -36,5 +36,5 @@ document.querySelector('.login__form').addEventListener('submit', (e) => {
 
 document.getElementById('register').addEventListener('submit', (e) => {
   e.preventDefault();
-  chrome.tabs.create({ url: 'https://moba-shop.link/register' });
+  chrome.tabs.create({ url: 'https://moba-shop.net/register' });
 });
