@@ -79,10 +79,35 @@ const Popup = React.memo(function Popup() {
               }
               break;
             case 'store.musinsa.com':
-              new_product = musinsa(html, url);
+              if (split_url[4] === 'goods') {
+                new_product = musinsa(html, url);
+              } else {
+                setIsSupported(true);
+                const currBox = document.querySelector('.currentBox');
+                if (currBox) {
+                  currBox.style.display = 'none';
+                }
+                const imageBox = document.querySelector('#imageBox');
+                if (imageBox) {
+                  imageBox.style.display = 'none';
+                }
+              }
+
               break;
             case 'www.musinsa.com':
-              new_product = musinsa(html, url);
+              if (split_url[4] === 'goods') {
+                new_product = musinsa(html, url);
+              } else {
+                setIsSupported(true);
+                const currBox = document.querySelector('.currentBox');
+                if (currBox) {
+                  currBox.style.display = 'none';
+                }
+                const imageBox = document.querySelector('#imageBox');
+                if (imageBox) {
+                  imageBox.style.display = 'none';
+                }
+              }
               break;
             case 'www.brandi.co.kr':
               if (split_url[3] === 'products') {
